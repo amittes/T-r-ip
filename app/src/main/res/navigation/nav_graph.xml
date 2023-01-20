@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/postsListFragment">
+    <fragment
+        android:id="@+id/postsListFragment"
+        android:name="com.example.t_r_ip.PostsListFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_posts_list">
+        <action
+            android:id="@+id/action_postsListFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.example.t_r_ip.PostFragment"
+        android:label="Post"
+        tools:layout="@layout/fragment_post" />
+</navigation>
