@@ -18,4 +18,14 @@
         android:name="com.example.t_r_ip.PostFragment"
         android:label="Post"
         tools:layout="@layout/fragment_post" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.t_r_ip.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.t_r_ip.UserProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>

@@ -3,16 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/main_menu_profile"
-        android:title="Profile"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/main_menu_setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title="Setting"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/main_menu_logout"
-        android:title="Logout" />
+        android:id="@+id/main_menu_addPost"
+        android:title="Add"
+        android:icon="@drawable/add_circle_svgrepo_com"
+        app:showAsAction="always" />
 </menu>
