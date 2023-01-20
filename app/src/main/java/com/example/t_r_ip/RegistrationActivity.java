@@ -30,16 +30,13 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        // taking FirebaseAuth instance
         mAuth = FirebaseAuth.getInstance();
 
-        // initialising all views through id defined above
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.passwd);
         Btn = findViewById(R.id.btnregister);
         progressBar = findViewById(R.id.progressbar);
 
-        // Set on Click Listener on Registration button
         Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -52,15 +49,12 @@ public class RegistrationActivity extends AppCompatActivity {
     private void registerNewUser()
     {
 
-        // show the visibility of progress bar to show loading
         progressBar.setVisibility(View.VISIBLE);
 
-        // Take the value of two edit texts in Strings
         String email, password;
         email = emailTextView.getText().toString();
         password = passwordTextView.getText().toString();
 
-        // Validations for input email and password
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(),
                             "Please enter email!!",
@@ -76,7 +70,6 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        // create new user or register new user
         mAuth
                 .createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -90,10 +83,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG)
                                     .show();
 
-                            // hide the progress bar
                             progressBar.setVisibility(View.GONE);
 
-                            // if the user created intent to login activity
                             Intent intent
                                     = new Intent(RegistrationActivity.this,
                                     MainActivity.class);
@@ -101,7 +92,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                         else {
 
-                            // Registration failed
                             Toast.makeText(
                                             getApplicationContext(),
                                             "Registration failed!!"
@@ -109,7 +99,6 @@ public class RegistrationActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG)
                                     .show();
 
-                            // hide the progress bar
                             progressBar.setVisibility(View.GONE);
                         }
                     }
