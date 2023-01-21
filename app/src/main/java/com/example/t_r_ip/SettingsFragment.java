@@ -49,6 +49,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        binding.email.setText(Model.instance().getCurrentUser().getEmail());
         binding.displayName.setHint(Model.instance().getCurrentUser().getDisplayName());
         binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
 

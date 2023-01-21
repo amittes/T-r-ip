@@ -44,7 +44,7 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false);
-        binding.email.setText(Model.instance().getCurrentUser().getDisplayName());
+        binding.displayName.setText(Model.instance().getCurrentUser().getDisplayName());
         binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
         return binding.getRoot();
     }
