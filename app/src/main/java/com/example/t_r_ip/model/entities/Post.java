@@ -1,19 +1,28 @@
-package com.example.t_r_ip.model;
+package com.example.t_r_ip.model.entities;
+
+import java.util.UUID;
 
 public class Post {
 
+    private String id;
     private String authorEmail;
     private String displayName;
     private String authorPictureUrl;
     private String postText;
     private String postUrl;
+    public static final String COLLECTION = "posts";
 
     public Post() {
+        this.id = String.valueOf(UUID.randomUUID());
         this.authorEmail = "";
         this.displayName = "";
         this.authorPictureUrl = "";
         this.postText = "";
         this.postUrl = "";
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getAuthorEmail() {

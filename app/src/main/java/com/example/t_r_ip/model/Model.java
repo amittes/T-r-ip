@@ -53,5 +53,7 @@ public class Model {
     }
 
 
-
+    public interface Listener<T> {
+        void onComplete(T list);
+    }
 }

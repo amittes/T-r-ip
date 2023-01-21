@@ -1,7 +1,8 @@
-package com.example.t_r_ip.model;
+package com.example.t_r_ip.model.entities;
 
 import android.net.Uri;
 
+import com.example.t_r_ip.model.Model;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
