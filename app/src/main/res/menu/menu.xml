@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_menu_addPost"
+        android:title="Add"
+        android:icon="@drawable/add_circle_svgrepo_com"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/main_menu_logout"
+        android:icon="@android:drawable/ic_menu_set_as"
+        android:title="log out"
+        app:showAsAction="always" />
+</menu>

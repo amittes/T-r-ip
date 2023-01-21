@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/postsListFragment">
+    <fragment
+        android:id="@+id/postsListFragment"
+        android:name="com.example.t_r_ip.PostsListFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_posts_list">
+        <action
+            android:id="@+id/action_postsListFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.example.t_r_ip.PostFragment"
+        android:label="Post"
+        tools:layout="@layout/fragment_post" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.t_r_ip.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.t_r_ip.UserProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/addPostFragment"
+        android:name="com.example.t_r_ip.AddPostFragment"
+        android:label="Add Post"
+        tools:layout="@layout/fragment_add_post" /><action android:id="@+id/action_global_addPostFragment" app:destination="@id/addPostFragment"/>
+</navigation>
