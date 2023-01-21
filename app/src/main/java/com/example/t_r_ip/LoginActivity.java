@@ -4,41 +4,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.t_r_ip.databinding.ActivityLoginBinding;
+import com.example.t_r_ip.model.Model;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText emailTextView, passwordTextView;
-    private Button loginBtn;
-    private Button signUpBtn;
-    private ProgressBar progressBar;
-    private FirebaseAuth mAuth;
+    ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        mAuth = FirebaseAuth.getInstance();
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        emailTextView = findViewById(R.id.email);
-        passwordTextView = findViewById(R.id.password);
-        loginBtn = findViewById(R.id.login);
-        signUpBtn = findViewById(R.id.signUp);
-        progressBar = findViewById(R.id.progressBar);
-
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -46,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
+        binding.signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
@@ -59,10 +47,10 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUserAccount()
     {
 
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
         String email, password;
-        email = emailTextView.getText().toString();
-        password = passwordTextView.getText().toString();
+        email = binding.email.getText().toString();
+        password = binding.password.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(),
@@ -80,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        Model.instance().mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(
                         new OnCompleteListener<AuthResult>() {
                             @Override
@@ -93,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.LENGTH_LONG)
                                             .show();
 
-                                    progressBar.setVisibility(View.GONE);
+                                    binding.progressBar.setVisibility(View.GONE);
                                     Intent intent
                                             = new Intent(LoginActivity.this,
                                             MainActivity.class);
@@ -105,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     "Login failed!!",
                                                     Toast.LENGTH_LONG)
                                             .show();
-                                    progressBar.setVisibility(View.GONE);
+                                    binding.progressBar.setVisibility(View.GONE);
                                 }
                             }
                         });

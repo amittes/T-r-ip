@@ -23,7 +23,13 @@
         android:hint="Enter your Email" />
 
     <EditText
-        android:id="@+id/passwd"
+        android:id="@+id/displayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your Display Name" />
+
+    <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter your Password"

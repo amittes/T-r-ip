@@ -28,4 +28,9 @@
         android:name="com.example.t_r_ip.UserProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/addPostFragment"
+        android:name="com.example.t_r_ip.AddPostFragment"
+        android:label="Add Post"
+        tools:layout="@layout/fragment_add_post" /><action android:id="@+id/action_global_addPostFragment" app:destination="@id/addPostFragment"/>
 </navigation>

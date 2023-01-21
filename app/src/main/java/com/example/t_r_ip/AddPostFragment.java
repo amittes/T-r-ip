@@ -1,15 +1,12 @@
 package com.example.t_r_ip;
 
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,11 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class PostFragment extends Fragment {
+import com.example.t_r_ip.databinding.FragmentAddPostBinding;
+import com.example.t_r_ip.model.Model;
 
-    public static PostFragment newInstance() {
-        return new PostFragment();
-    }
+public class AddPostFragment extends Fragment {
+
+    FragmentAddPostBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +29,7 @@ public class PostFragment extends Fragment {
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menu.removeItem(R.id.main_menu_addPost);
                 menu.removeItem(R.id.main_menu_logout);
             }
 
@@ -42,8 +41,12 @@ public class PostFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_post, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        binding = FragmentAddPostBinding.inflate(inflater, container, false);
+        binding.username.setText(Model.instance().getCurrentUser().getDisplayName());
+        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        return binding.getRoot();
     }
 }

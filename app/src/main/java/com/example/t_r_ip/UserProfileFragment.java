@@ -1,5 +1,6 @@
 package com.example.t_r_ip;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.t_r_ip.databinding.FragmentUserProfileBinding;
+import com.example.t_r_ip.model.Model;
+
 public class UserProfileFragment extends Fragment {
+    FragmentUserProfileBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menu.removeItem(R.id.main_menu_addPost);
+                menu.removeItem(R.id.main_menu_logout);
             }
 
             @Override
@@ -37,8 +43,9 @@ public class UserProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        return view;
+        binding = FragmentUserProfileBinding.inflate(inflater, container, false);
+        binding.email.setText(Model.instance().getCurrentUser().getDisplayName());
+        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        return binding.getRoot();
     }
 }
