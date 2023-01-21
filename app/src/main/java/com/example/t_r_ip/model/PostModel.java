@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class PostModel {
     private FirebaseModel firebaseModel;
@@ -49,8 +51,11 @@ public class PostModel {
                 });
     }
 
-    public void addStudent(Post post, Model.Listener<Void> listener) {
-        firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(gson.toJson(post))
+    public void addPost(Post post, Model.Listener<Void> listener) {
+        String jsonPost = gson.toJson(post);
+        Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>(){}.getType());
+
+        firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

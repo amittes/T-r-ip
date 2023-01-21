@@ -1,15 +1,23 @@
 package com.example.t_r_ip.model.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.UUID;
 
+@Entity
 public class Post {
 
+    @PrimaryKey
+    @NonNull
     private String id;
+
     private String authorEmail;
     private String displayName;
     private String authorPictureUrl;
     private String postText;
-    private String postUrl;
+    private String postPictureUrl;
     public static final String COLLECTION = "posts";
 
     public Post() {
@@ -18,7 +26,7 @@ public class Post {
         this.displayName = "";
         this.authorPictureUrl = "";
         this.postText = "";
-        this.postUrl = "";
+        this.postPictureUrl = "";
     }
 
     public String getId() {
@@ -57,11 +65,11 @@ public class Post {
         this.postText = postText;
     }
 
-    public String getPostUrl() {
-        return postUrl;
+    public String getPostPictureUrl() {
+        return postPictureUrl;
     }
 
-    public void setPostUrl(String postUrl) {
-        this.postUrl = postUrl;
+    public void setPostPictureUrl(String postUrl) {
+        this.postPictureUrl = postUrl;
     }
 }
