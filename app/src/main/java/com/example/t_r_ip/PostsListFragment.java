@@ -1,7 +1,5 @@
 package com.example.t_r_ip;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,24 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.t_r_ip.databinding.FragmentPostsListBinding;
+
 public class PostsListFragment extends Fragment {
-
-    private PostsListViewModel mViewModel;
-
-    public static PostsListFragment newInstance() {
-        return new PostsListFragment();
-    }
-
+    private FragmentPostsListBinding binding;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        binding = FragmentPostsListBinding.inflate(inflater, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_posts_list, container, false);
-
-        View button = view.findViewById(R.id.postslist_btn);
         NavDirections action = PostsListFragmentDirections.actionPostsListFragmentToPostFragment();
-        button.setOnClickListener(Navigation.createNavigateOnClickListener(action));
+        binding.button.setOnClickListener(Navigation.createNavigateOnClickListener(action));
 
-        return view;
+        return binding.getRoot();
     }
 }
