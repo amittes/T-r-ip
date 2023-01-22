@@ -74,7 +74,7 @@ public class AddPostFragment extends Fragment {
         post.setPostPictureUrl("bla");
         post.setAuthorEmail(Model.instance().getCurrentUser().getEmail());
         post.setDisplayName(Model.instance().getCurrentUser().getDisplayName());
-        post.setAuthorPictureUrl("");
+        post.setAuthorPictureUrl(String.valueOf(Model.instance().getCurrentUser().getPhotoUrl()));
         postModel.addPost(post, listener);
 
     }
