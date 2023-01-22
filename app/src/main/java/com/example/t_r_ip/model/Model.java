@@ -18,7 +18,6 @@ public class Model {
 
     private Executor executor = Executors.newSingleThreadExecutor();
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
-    private FirebaseModel firebaseModel = new FirebaseModel();
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public static Model instance(){
@@ -51,7 +50,6 @@ public class Model {
     public void logOut () {
         mAuth.signOut();
     }
-
 
     public interface Listener<T> {
         void onComplete(T list);

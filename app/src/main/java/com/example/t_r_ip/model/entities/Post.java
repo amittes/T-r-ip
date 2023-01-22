@@ -1,9 +1,16 @@
 package com.example.t_r_ip.model.entities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.t_r_ip.MyApplication;
+import com.google.firebase.Timestamp;
+
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -12,13 +19,15 @@ public class Post {
     @PrimaryKey
     @NonNull
     private String id;
-
     private String authorEmail;
     private String displayName;
     private String authorPictureUrl;
     private String postText;
     private String postPictureUrl;
+    public long lastUpdated;
     public static final String COLLECTION = "posts";
+    public static final String LAST_UPDATED = "lastUpdated";
+    private static final String LOCAL_LAST_UPDATED = "students_local_last_update";
 
     public Post() {
         this.id = String.valueOf(UUID.randomUUID());
@@ -27,10 +36,15 @@ public class Post {
         this.authorPictureUrl = "";
         this.postText = "";
         this.postPictureUrl = "";
+        this.lastUpdated = System.currentTimeMillis();
     }
 
     public String getId() {
         return id;
+    }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     public String getAuthorEmail() {
@@ -71,5 +85,25 @@ public class Post {
 
     public void setPostPictureUrl(String postUrl) {
         this.postPictureUrl = postUrl;
+    }
+
+    public long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public static Long getLocalLastUpdate() {
+        SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
+        return sharedPref.getLong(LOCAL_LAST_UPDATED, 0);
+    }
+
+    public static void setLocalLastUpdate(Long time) {
+        SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(LOCAL_LAST_UPDATED,time);
+        editor.commit();
     }
 }

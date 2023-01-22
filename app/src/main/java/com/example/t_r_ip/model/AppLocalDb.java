@@ -21,7 +21,6 @@ public class AppLocalDb{
                 .fallbackToDestructiveMigration()
                 .build();
     }
-    
 
     private AppLocalDb(){}
 }
