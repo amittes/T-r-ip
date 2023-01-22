@@ -68,7 +68,6 @@ public class PostModel {
                 Log.d("TAG", " firebase return : " + list.size());
                 Long time = localLastUpdate;
                 for(Post post:list){
-                    // insert new records into ROOM
                     localDb.postDao().insertAll(post);
                     if (time < post.getLastUpdated()){
                         time = post.getLastUpdated();
