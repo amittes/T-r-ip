@@ -1,17 +1,9 @@
 package com.example.t_r_ip.model;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 
-import androidx.core.os.HandlerCompat;
-
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class UserModel {
     private static final UserModel _instance = new UserModel();

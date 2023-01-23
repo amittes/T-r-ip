@@ -1,14 +1,6 @@
 package com.example.t_r_ip;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
-import com.example.t_r_ip.model.Model;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;

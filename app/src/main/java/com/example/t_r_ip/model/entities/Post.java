@@ -8,9 +8,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.t_r_ip.MyApplication;
-import com.google.firebase.Timestamp;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Entity

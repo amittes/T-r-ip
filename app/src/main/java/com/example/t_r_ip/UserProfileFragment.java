@@ -1,14 +1,6 @@
 package com.example.t_r_ip;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+
 import com.example.t_r_ip.databinding.FragmentUserProfileBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.UserModel;
 
 public class UserProfileFragment extends Fragment {
     FragmentUserProfileBinding binding;
@@ -44,8 +43,8 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false);
-        binding.displayName.setText(Model.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
+        binding.profileImage.setImageURI(UserModel.instance().getCurrentUser().getPhotoUrl());
         return binding.getRoot();
     }
 }

@@ -1,17 +1,17 @@
 package com.example.t_r_ip;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.UserModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.main_bottomNavigationView);
         NavigationUI.setupWithNavController(navView, navController);
 
-        FirebaseUser currentUser = Model.instance().getCurrentUser();
+        FirebaseUser currentUser = UserModel.instance().getCurrentUser();
         if(currentUser == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.main_menu_addPost) {
             navController.navigate(R.id.action_global_addPostFragment);
         } else if (item.getItemId() == R.id.main_menu_logout) {
-            Model.instance().logOut();
+            UserModel.instance().logOut();
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
