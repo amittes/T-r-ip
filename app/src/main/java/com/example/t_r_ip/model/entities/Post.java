@@ -8,6 +8,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.t_r_ip.MyApplication;
+import com.google.firebase.Timestamp;
+import com.google.gson.annotations.Expose;
 
 import java.util.UUID;
 
@@ -16,13 +18,20 @@ public class Post {
 
     @PrimaryKey
     @NonNull
+    @Expose
     private String id;
+    @Expose
     private String authorEmail;
+    @Expose
     private String displayName;
+    @Expose
     private String authorPictureUrl;
+    @Expose
     private String postText;
+    @Expose
     private String postPictureUrl;
-    public long lastUpdated;
+    @Expose(deserialize = false)
+    private long lastUpdated;
     public static final String COLLECTION = "posts";
     public static final String LAST_UPDATED = "lastUpdated";
     private static final String LOCAL_LAST_UPDATED = "students_local_last_update";

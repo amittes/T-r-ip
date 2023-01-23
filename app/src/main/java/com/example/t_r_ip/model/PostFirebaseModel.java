@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,9 @@ public class PostFirebaseModel extends FirebaseModel{
 
     private PostFirebaseModel() {
         this.firebaseModel = FirebaseModel.instance();
-        this.gson = new Gson();
+        this.gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
     }
 
     public static PostFirebaseModel instance(){
@@ -43,9 +46,10 @@ public class PostFirebaseModel extends FirebaseModel{
                         List<Post> list = new LinkedList<>();
                         if (task.isSuccessful()){
                             QuerySnapshot jsonsList = task.getResult();
-                            for (DocumentSnapshot json: jsonsList){
-                                Post post = gson.fromJson(String.valueOf(json), Post.class);
-                                Timestamp time = (Timestamp) json.get(LAST_UPDATED);
+                            for (DocumentSnapshot snapshot: jsonsList){
+                                String json = gson.toJson(snapshot.getData());
+                                Post post = gson.fromJson(json, Post.class);
+                                Timestamp time = (Timestamp) snapshot.get(LAST_UPDATED);
                                 post.setLastUpdated(time.getSeconds());
                                 list.add(post);
                             }
