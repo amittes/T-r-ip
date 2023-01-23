@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.t_r_ip.databinding.ActivityRegistrationBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -82,7 +83,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                     .show();
 
                             binding.progressbar.setVisibility(View.GONE);
-                            Model.instance().updateUserDisplayName(displayName);
+                            User user = new User(Model.instance().getCurrentUserId(), email, displayName, "");
+                            Model.instance().saveUser(user, (unused) -> {});
                             Intent intent
                                     = new Intent(RegistrationActivity.this,
                                     MainActivity.class);

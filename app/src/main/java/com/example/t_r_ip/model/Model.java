@@ -1,5 +1,6 @@
 package com.example.t_r_ip.model;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,8 +17,8 @@ import java.util.concurrent.Executors;
 public class Model {
     private static final Model _instance = new Model();
 
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+//    private Executor executor = Executors.newSingleThreadExecutor();
+//    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private FirebaseModel firebaseModel = new FirebaseModel();
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -28,30 +29,41 @@ public class Model {
     private Model() {
     }
 
+    public interface Listener<T>{
+        void onComplete(T data);
+    }
+
     public FirebaseUser getCurrentUser() {
         return mAuth.getCurrentUser();
     }
 
-    public void updateUserDisplayName(String displayName) {
-        UserProfileChangeRequest.Builder userProfileChangeRequestBuilder = new UserProfileChangeRequest.Builder();
-        userProfileChangeRequestBuilder.setDisplayName(displayName);
-        getCurrentUser().updateProfile(userProfileChangeRequestBuilder.build());
+    public String getCurrentUserId() {
+        return mAuth.getCurrentUser().getUid();
     }
+
+    public void saveUser (User user, Model.Listener<Void> listener) {
+        firebaseModel.saveUser(user,listener); // refresh?
+    }
+
+    public void getUserDataById (String id, Listener<User> listener) {
+        firebaseModel.getUserById(id, user -> listener.onComplete(user));
+    }
+//
+//    public void updateUserDisplayName(String displayName) {
+//        UserProfileChangeRequest.Builder userProfileChangeRequestBuilder = new UserProfileChangeRequest.Builder();
+//        userProfileChangeRequestBuilder.setDisplayName(displayName);
+//        getCurrentUser().updateProfile(userProfileChangeRequestBuilder.build());
+//    }
 
     public void updateUserPassword(String password) {
         getCurrentUser().updatePassword(password);
     }
 
-    public void updateUserProfilePicture(Uri uri) {
-        UserProfileChangeRequest.Builder userProfileChangeRequestBuilder = new UserProfileChangeRequest.Builder();
-        userProfileChangeRequestBuilder.setPhotoUri(uri);
-        getCurrentUser().updateProfile(userProfileChangeRequestBuilder.build());
+    public void uploadImage(String name, Bitmap bitmap, Listener<String> listener) {
+        firebaseModel.saveImageInStorage(name,bitmap,listener);
     }
 
     public void logOut () {
         mAuth.signOut();
     }
-
-
-
 }

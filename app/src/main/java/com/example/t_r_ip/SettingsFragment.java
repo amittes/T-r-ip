@@ -1,11 +1,13 @@
 package com.example.t_r_ip;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -13,21 +15,25 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
 
 import com.example.t_r_ip.databinding.FragmentSettingsBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.User;
+import com.squareup.picasso.Picasso;
 
 public class SettingsFragment extends Fragment {
 
     FragmentSettingsBinding binding;
+    ActivityResultLauncher<Void> cameraLauncher;
+    ActivityResultLauncher<String> galleryLauncher;
+
+    Boolean isAvatarSelected = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,33 +49,80 @@ public class SettingsFragment extends Fragment {
                 return false;
             }
         },this, Lifecycle.State.RESUMED);
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
+            @Override
+            public void onActivityResult(Bitmap result) {
+                if (result != null) {
+                    binding.profileImage.setImageBitmap(result);
+                    isAvatarSelected = true;
+                }
+            }
+        });
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                if (result != null){
+                    binding.profileImage.setImageURI(result);
+                    isAvatarSelected = true;
+                }
+            }
+        });
+    }
+
+    public void setUploadPictureLauncher () {
+        cameraLauncher.launch(null);
+    }
+
+    public void setGalleryLauncher () {
+        galleryLauncher.launch("image/*");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        binding.email.setText(Model.instance().getCurrentUser().getEmail());
-        binding.displayName.setHint(Model.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
 
-        binding.updatePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imageChooser();
+        Model.instance().getUserDataById(Model.instance().getCurrentUserId(), (user)-> {
+            if (user != null) {
+                binding.email.setText(user.getEmail());
+                binding.displayName.setHint(user.getDisplayName());
+                if (user.getProfilePictureUrl() != "") {
+                    Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                }
             }
+        });
+
+        binding.profileImage.setOnClickListener(view -> {
+            new ProfilePictureDialogFragment().show(
+                    getChildFragmentManager(), ProfilePictureDialogFragment.TAG);
         });
 
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Model currentUser = Model.instance();
+                String email = currentUser.getCurrentUser().getEmail();
                 String displayName = binding.displayName.getText().toString();
+
+                User user = new User(currentUser.getCurrentUserId(), email, displayName, "");
+
                 String password = binding.password.getText().toString();
-                if (!TextUtils.isEmpty(displayName)) {
-                    Model.instance().updateUserDisplayName(displayName);
-                }
                 if (!TextUtils.isEmpty(password)) {
-                    Model.instance().updateUserPassword(password);
+                    currentUser.updateUserPassword(password);
+                }
+
+                if (isAvatarSelected) {
+                    binding.profileImage.setDrawingCacheEnabled(true);
+                    binding.profileImage.buildDrawingCache();
+                    Bitmap bitmap = ((BitmapDrawable) binding.profileImage.getDrawable()).getBitmap();
+                    Model.instance().uploadImage(email, bitmap, url -> {
+                        if (url != null) {
+                            user.setProfilePictureUrl(url);
+                        }
+
+                        currentUser.saveUser(user, (unused) -> {});
+                    });
                 }
                 new AlertDialogFragment().show(
                         getChildFragmentManager(), AlertDialogFragment.TAG);
@@ -79,39 +132,5 @@ public class SettingsFragment extends Fragment {
         return binding.getRoot();
     }
 
-    int SELECT_PICTURE = 200;
-    void imageChooser() {
 
-        // create an instance of the
-        // intent of the type image
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-
-        // pass the constant to compare it
-        // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
-    }
-
-    // this function is triggered when user
-    // selects the image from the imageChooser
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // update the preview image in the layout
-
-                    binding.profileImage.setImageURI(selectedImageUri);
-                    Model.instance().updateUserProfilePicture(selectedImageUri);
-                }
-            }
-        }
-    }
 }

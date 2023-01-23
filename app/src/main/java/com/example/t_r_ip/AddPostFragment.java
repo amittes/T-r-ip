@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
 import com.example.t_r_ip.model.Model;
+import com.squareup.picasso.Picasso;
 
 public class AddPostFragment extends Fragment {
 
@@ -45,8 +46,14 @@ public class AddPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-        binding.username.setText(Model.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        Model.instance().getUserDataById(Model.instance().getCurrentUserId(), (user)-> {
+            if (user != null) {
+                binding.displayName.setText(user.getDisplayName());
+                if (user.getProfilePictureUrl() != "") {
+                    Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                }
+            }
+        });
         return binding.getRoot();
     }
 }

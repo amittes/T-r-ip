@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 
 import com.example.t_r_ip.databinding.FragmentUserProfileBinding;
 import com.example.t_r_ip.model.Model;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 public class UserProfileFragment extends Fragment {
     FragmentUserProfileBinding binding;
@@ -44,8 +46,14 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentUserProfileBinding.inflate(inflater, container, false);
-        binding.displayName.setText(Model.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        Model.instance().getUserDataById(Model.instance().getCurrentUserId(), (user)-> {
+            if (user != null) {
+                binding.displayName.setText(user.getDisplayName());
+                if (user.getProfilePictureUrl() != "") {
+                    Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                }
+            }
+        });
         return binding.getRoot();
     }
 }
