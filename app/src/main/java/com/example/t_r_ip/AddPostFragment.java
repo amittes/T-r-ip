@@ -19,12 +19,12 @@ import android.view.ViewGroup;
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
 import com.example.t_r_ip.model.Model;
 import com.example.t_r_ip.model.PostModel;
+import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
 
 public class AddPostFragment extends Fragment {
 
     private FragmentAddPostBinding binding;
-    private PostModel postModel = new PostModel();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,8 @@ public class AddPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-        binding.username.setText(Model.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        binding.username.setText(UserModel.instance().getCurrentUser().getDisplayName());
+        binding.profileImage.setImageURI(UserModel.instance().getCurrentUser().getPhotoUrl());
 
         binding.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +63,7 @@ public class AddPostFragment extends Fragment {
     }
 
     private void sharePost() {
-        Model.Listener<Void> listener = new Model.Listener<Void>() {
+        UserModel.Listener<Void> listener = new UserModel.Listener<Void>() {
             @Override
             public void onComplete(Void aVoid) {
 
@@ -72,11 +72,10 @@ public class AddPostFragment extends Fragment {
         Post post = new Post();
         post.setPostText("hello");
         post.setPostPictureUrl("bla");
-        post.setAuthorEmail(Model.instance().getCurrentUser().getEmail());
-        post.setDisplayName(Model.instance().getCurrentUser().getDisplayName());
-        post.setAuthorPictureUrl(String.valueOf(Model.instance().getCurrentUser().getPhotoUrl()));
-        postModel.addPost(post, (unused) -> {
-
+        post.setAuthorEmail(UserModel.instance().getCurrentUser().getEmail());
+        post.setDisplayName(UserModel.instance().getCurrentUser().getDisplayName());
+        post.setAuthorPictureUrl(String.valueOf(UserModel.instance().getCurrentUser().getPhotoUrl()));
+        PostModel.instance().addPost(post, (unused) -> {
         });
 
     }
