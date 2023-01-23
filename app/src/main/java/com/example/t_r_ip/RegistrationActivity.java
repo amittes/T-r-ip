@@ -3,6 +3,7 @@ package com.example.t_r_ip;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.example.t_r_ip.model.Model;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -36,8 +38,7 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
-    private void registerNewUser()
-    {
+    private void registerNewUser() {
 
         binding.progressbar.setVisibility(View.VISIBLE);
 
@@ -68,36 +69,54 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
-        Model.instance().mAuth
-                .createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
+        Model.instance().mAuth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task)
-                    {
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(),
-                                            "Registration successful!",
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            SignInMethodQueryResult result = task.getResult();
+                            if (result != null && !result.getSignInMethods().isEmpty()) {
+                                Toast.makeText(getApplicationContext(),
+                                                "Email is already registered",
+                                                Toast.LENGTH_LONG)
+                                        .show();
+                            } else {
+                                Model.instance().mAuth
+                                        .createUserWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                            binding.progressbar.setVisibility(View.GONE);
-                            Model.instance().updateUserDisplayName(displayName);
-                            Intent intent
-                                    = new Intent(RegistrationActivity.this,
-                                    MainActivity.class);
-                            startActivity(intent);
-                        }
-                        else {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task)
+                                            {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getApplicationContext(),
+                                                                    "Registration successful!",
+                                                                    Toast.LENGTH_LONG)
+                                                            .show();
 
-                            Toast.makeText(
-                                            getApplicationContext(),
-                                            "Registration failed!!"
-                                                    + " Please try again later",
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                                                    binding.progressbar.setVisibility(View.GONE);
+                                                    Model.instance().updateUserDisplayName(displayName);
+                                                    Intent intent
+                                                            = new Intent(RegistrationActivity.this,
+                                                            MainActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                                else {
 
-                            binding.progressbar.setVisibility(View.GONE);
+                                                    Toast.makeText(
+                                                                    getApplicationContext(),
+                                                                    "Registration failed!!"
+                                                                            + " Please try again later",
+                                                                    Toast.LENGTH_LONG)
+                                                            .show();
+
+                                                    binding.progressbar.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.w("TAG", "fetchSignInMethodsForEmail:failure", task.getException());
                         }
                     }
                 });
