@@ -34,7 +34,6 @@ public class Post {
         this.authorPictureUrl = "";
         this.postText = "";
         this.postPictureUrl = "";
-        this.lastUpdated = System.currentTimeMillis();
     }
 
     public String getId() {

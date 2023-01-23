@@ -1,5 +1,7 @@
 package com.example.t_r_ip.model;
 
+import static com.example.t_r_ip.model.entities.Post.LAST_UPDATED;
+
 import androidx.annotation.NonNull;
 
 import com.example.t_r_ip.model.entities.Post;
@@ -8,6 +10,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.common.reflect.TypeToken;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
@@ -32,7 +35,7 @@ public class PostFirebaseModel extends FirebaseModel{
 
     public void getAllPostsSince(Long since, PostModel.Listener<List<Post>> callback){
         firebaseModel.getDb().collection(Post.COLLECTION)
-                .whereGreaterThanOrEqualTo(Post.LAST_UPDATED, new Timestamp(since,0))
+                .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since,0))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -42,6 +45,8 @@ public class PostFirebaseModel extends FirebaseModel{
                             QuerySnapshot jsonsList = task.getResult();
                             for (DocumentSnapshot json: jsonsList){
                                 Post post = gson.fromJson(String.valueOf(json), Post.class);
+                                Timestamp time = (Timestamp) json.get(LAST_UPDATED);
+                                post.setLastUpdated(time.getSeconds());
                                 list.add(post);
                             }
                         }
@@ -53,7 +58,7 @@ public class PostFirebaseModel extends FirebaseModel{
     public void addPost(Post post, PostModel.Listener<Void> listener) {
         String jsonPost = gson.toJson(post);
         Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>(){}.getType());
-
+        mapPost.put(LAST_UPDATED, FieldValue.serverTimestamp());
         firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
