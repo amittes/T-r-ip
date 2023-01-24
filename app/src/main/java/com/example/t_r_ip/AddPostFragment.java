@@ -1,12 +1,6 @@
 package com.example.t_r_ip;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
@@ -14,7 +8,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
+import com.example.t_r_ip.model.Model;
+import com.squareup.picasso.Picasso;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
@@ -46,21 +49,27 @@ public class AddPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-        binding.username.setText(UserModel.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(UserModel.instance().getCurrentUser().getPhotoUrl());
 
+        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
+        UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user)-> {
+            if (user != null) {
+                binding.displayName.setText(user.getDisplayName());
+                if (user.getProfilePictureUrl() != "") {
+                    Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                }
+            }
+        });
         binding.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sharePost(binding.postInfo.getEditText().getText().toString());
             }
         });
-
         return binding.getRoot();
     }
 
     private void sharePost(String postInfo) {
-        UserModel.Listener<Void> listener = new UserModel.Listener<Void>() {
+        Model.Listener<Void> listener = new Model.Listener<Void>() {
             @Override
             public void onComplete(Void aVoid) {
 

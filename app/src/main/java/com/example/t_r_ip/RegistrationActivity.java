@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.t_r_ip.databinding.ActivityRegistrationBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.entities.User;
 import com.example.t_r_ip.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -95,7 +96,9 @@ public class RegistrationActivity extends AppCompatActivity {
                                                             .show();
 
                                                     binding.progressbar.setVisibility(View.GONE);
-                                                    UserModel.instance().updateUserDisplayName(displayName);
+                                                    User user = new User(UserModel.instance().getCurrentUserId(), email, displayName, "");
+
+                                                    UserModel.instance().saveUser(user, (unused) -> {});
                                                     Intent intent
                                                             = new Intent(RegistrationActivity.this,
                                                             MainActivity.class);
