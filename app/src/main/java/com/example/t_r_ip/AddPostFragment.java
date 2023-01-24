@@ -52,14 +52,14 @@ public class AddPostFragment extends Fragment {
         binding.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharePost();
+                sharePost(binding.postInfo.getEditText().getText().toString());
             }
         });
 
         return binding.getRoot();
     }
 
-    private void sharePost() {
+    private void sharePost(String postInfo) {
         UserModel.Listener<Void> listener = new UserModel.Listener<Void>() {
             @Override
             public void onComplete(Void aVoid) {
@@ -67,7 +67,7 @@ public class AddPostFragment extends Fragment {
             }
         };
         Post post = new Post();
-        post.setPostText("hello");
+        post.setPostText(postInfo);
         post.setPostPictureUrl("bla");
         post.setAuthorEmail(UserModel.instance().getCurrentUser().getEmail());
         post.setDisplayName(UserModel.instance().getCurrentUser().getDisplayName());
