@@ -1,6 +1,5 @@
 package com.example.t_r_ip.model;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,8 +16,9 @@ import java.util.concurrent.Executors;
 public class Model {
     private static final Model _instance = new Model();
 
-//    private Executor executor = Executors.newSingleThreadExecutor();
-//    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+    private Executor executor = Executors.newSingleThreadExecutor();
+    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private FirebaseModel firebaseModel = new FirebaseModel();
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
