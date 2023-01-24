@@ -1,12 +1,15 @@
 package com.example.t_r_ip;
 
-import static android.app.Activity.RESULT_OK;
-
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -21,14 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-
 import com.example.t_r_ip.databinding.FragmentSettingsBinding;
-import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.entities.User;
+import com.example.t_r_ip.model.UserModel;
+import com.squareup.picasso.Picasso;
 
 public class SettingsFragment extends Fragment {
 
@@ -104,16 +103,22 @@ public class SettingsFragment extends Fragment {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserModel currentUser = UserModel.instance();
-                String email = currentUser.getCurrentUser().getEmail();
+                UserModel userModel = UserModel.instance();
+                String email = userModel.getCurrentUser().getEmail();
                 String displayName = binding.displayName.getText().toString();
 
-                User user = new User(currentUser.getCurrentUserId(), email, displayName, "");
+                if (displayName == "") { displayName = userModel.getCurrentUser().getDisplayName(); }
+
+                User user = new User(userModel.getCurrentUserId(), email, displayName, "");
+
+                Log.d("TAG", "current user " + user.toJson());
 
                 String password = binding.password.getText().toString();
                 if (!TextUtils.isEmpty(password)) {
-                    currentUser.updateUserPassword(password);
+                    userModel.updateUserPassword(password);
                 }
+
+                Log.d("TAG", "isAvatarSelected " + isAvatarSelected);
 
                 if (isAvatarSelected) {
                     binding.profileImage.setDrawingCacheEnabled(true);
@@ -124,8 +129,16 @@ public class SettingsFragment extends Fragment {
                             user.setProfilePictureUrl(url);
                         }
 
-                        currentUser.saveUser(user, (unused) -> {});
+                        userModel.saveUser(user, (unused) -> {});
                     });
+                } else {
+
+                    userModel.getUserDataById(userModel.getCurrentUserId(), (userCurrentData) -> {
+                        user.setProfilePictureUrl(userCurrentData.getProfilePictureUrl());
+                        Log.d("TAG", "current user 2 " + userCurrentData.toJson());
+                        userModel.saveUser(user, (unused) -> {});
+                    });
+
                 }
                 new AlertDialogFragment().show(
                         getChildFragmentManager(), AlertDialogFragment.TAG);

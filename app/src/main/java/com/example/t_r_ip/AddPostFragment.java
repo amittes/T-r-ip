@@ -49,8 +49,9 @@ public class AddPostFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-        binding.username.setText(Model.instance().getCurrentUser().getDisplayName());
-        Model.instance().getUserDataById(Model.instance().getCurrentUserId(), (user)-> {
+
+        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
+        UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user)-> {
             if (user != null) {
                 binding.displayName.setText(user.getDisplayName());
                 if (user.getProfilePictureUrl() != "") {
@@ -68,7 +69,7 @@ public class AddPostFragment extends Fragment {
     }
 
     private void sharePost(String postInfo) {
-        UserModel.Listener<Void> listener = new UserModel.Listener<Void>() {
+        Model.Listener<Void> listener = new Model.Listener<Void>() {
             @Override
             public void onComplete(Void aVoid) {
 
