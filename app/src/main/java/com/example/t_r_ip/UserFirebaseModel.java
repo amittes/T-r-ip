@@ -1,16 +1,16 @@
-package com.example.t_r_ip.model;
+package com.example.t_r_ip;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
 
-public class FirebaseModel {
-    private static final FirebaseModel _instance = new FirebaseModel();
+public class UserFirebaseModel {
+    private static final UserFirebaseModel _instance = new UserFirebaseModel();
 
     private static FirebaseFirestore db;
     private static FirebaseStorage storage;
 
-    public static FirebaseModel instance(){
+    public static UserFirebaseModel instance(){
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)

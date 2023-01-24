@@ -5,6 +5,13 @@ import static android.app.Activity.RESULT_OK;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
@@ -12,18 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
-
 import com.example.t_r_ip.databinding.FragmentSettingsBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.UserModel;
 
 public class SettingsFragment extends Fragment {
 
@@ -49,9 +47,9 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        binding.email.setText(Model.instance().getCurrentUser().getEmail());
-        binding.displayName.setHint(Model.instance().getCurrentUser().getDisplayName());
-        binding.profileImage.setImageURI(Model.instance().getCurrentUser().getPhotoUrl());
+        binding.email.setText(UserModel.instance().getCurrentUser().getEmail());
+        binding.displayName.setHint(UserModel.instance().getCurrentUser().getDisplayName());
+        binding.profileImage.setImageURI(UserModel.instance().getCurrentUser().getPhotoUrl());
 
         binding.updatePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,10 +64,10 @@ public class SettingsFragment extends Fragment {
                 String displayName = binding.displayName.getText().toString();
                 String password = binding.password.getText().toString();
                 if (!TextUtils.isEmpty(displayName)) {
-                    Model.instance().updateUserDisplayName(displayName);
+                    UserModel.instance().updateUserDisplayName(displayName);
                 }
                 if (!TextUtils.isEmpty(password)) {
-                    Model.instance().updateUserPassword(password);
+                    UserModel.instance().updateUserPassword(password);
                 }
                 new AlertDialogFragment().show(
                         getChildFragmentManager(), AlertDialogFragment.TAG);
@@ -109,7 +107,7 @@ public class SettingsFragment extends Fragment {
                     // update the preview image in the layout
 
                     binding.profileImage.setImageURI(selectedImageUri);
-                    Model.instance().updateUserProfilePicture(selectedImageUri);
+                    UserModel.instance().updateUserProfilePicture(selectedImageUri);
                 }
             }
         }
