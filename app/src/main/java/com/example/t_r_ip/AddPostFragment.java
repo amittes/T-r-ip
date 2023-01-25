@@ -1,13 +1,21 @@
 package com.example.t_r_ip;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,9 +30,14 @@ import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
 
-public class AddPostFragment extends Fragment {
+public class AddPostFragment extends Fragment implements OptionsDialogFragmentInterface {
 
     private FragmentAddPostBinding binding;
+
+    ActivityResultLauncher<Void> cameraLauncher;
+    ActivityResultLauncher<String> galleryLauncher;
+
+    Boolean isAvatarSelected = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,14 +55,31 @@ public class AddPostFragment extends Fragment {
                 return false;
             }
         },this, Lifecycle.State.RESUMED);
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
+            @Override
+            public void onActivityResult(Bitmap result) {
+                if (result != null) {
+                    binding.postImage.setImageBitmap(result);
+                    isAvatarSelected = true;
+                }
+            }
+        });
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                if (result != null){
+                    binding.postImage.setImageURI(result);
+                    isAvatarSelected = true;
+                }
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-
         binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
         UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user)-> {
             if (user != null) {
@@ -59,13 +89,36 @@ public class AddPostFragment extends Fragment {
                 }
             }
         });
+        binding.attachPostData.setOnClickListener(view -> {
+            String title = "What would you like to do?";
+            String[] options = {"Take picture from gallery", "Upload picture", "Add location"};
+            DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options );
+            dialogFragment.show(getChildFragmentManager(), "ATTACH_TO_POST_DIALOG");
+        });
+
         binding.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharePost(binding.postInfo.getEditText().getText().toString());
+                sharePost(binding.postInfo.getText().toString());
             }
         });
         return binding.getRoot();
+    }
+
+    public void setUploadPictureLauncher () {
+        cameraLauncher.launch(null);
+    }
+
+    public void setGalleryLauncher () {
+        galleryLauncher.launch("image/*");
+    }
+
+    public void doOptionSelected (int index) {
+        if (index==0) {
+            setGalleryLauncher();
+        } else if (index==1){
+            setUploadPictureLauncher();
+        }
     }
 
     private void sharePost(String postInfo) {
@@ -77,12 +130,24 @@ public class AddPostFragment extends Fragment {
         };
         Post post = new Post();
         post.setPostText(postInfo);
-        post.setPostPictureUrl("bla");
+        post.setPostPictureUrl("");
         post.setAuthorEmail(UserModel.instance().getCurrentUser().getEmail());
         post.setDisplayName(UserModel.instance().getCurrentUser().getDisplayName());
         post.setAuthorPictureUrl(String.valueOf(UserModel.instance().getCurrentUser().getPhotoUrl()));
-        PostModel.instance().addPost(post, (unused) -> {
-        });
+        if (isAvatarSelected) {
+            binding.postImage.setDrawingCacheEnabled(true);
+            binding.postImage.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) binding.postImage.getDrawable()).getBitmap();
+            PostModel.instance().uploadImage(post.getId(), bitmap, url -> {
+                if (url != null) {
+                    post.setPostPictureUrl(url);
+                }
+                PostModel.instance().addPost(post, (unused) -> {});
+            });
+        }
+        PostModel.instance().addPost(post, (unused) -> {});
 
+        new AlertDialogFragment().show(
+                getChildFragmentManager(), AlertDialogFragment.TAG);
     }
 }

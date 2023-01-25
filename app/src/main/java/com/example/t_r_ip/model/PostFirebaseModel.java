@@ -2,19 +2,29 @@ package com.example.t_r_ip.model;
 
 import static com.example.t_r_ip.model.entities.Post.LAST_UPDATED;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.t_r_ip.model.entities.Post;
+import com.example.t_r_ip.model.utils.ImageUploader;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.reflect.TypeToken;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -72,29 +82,8 @@ public class PostFirebaseModel extends FirebaseModel{
                 });
     }
 
-    //    void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener){
-//        StorageReference storageRef = firebaseModel.getStorage().getReference();
-//        StorageReference imagesRef = storageRef.child("images/" + name + ".jpg");
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//        byte[] data = baos.toByteArray();
-//
-//        UploadTask uploadTask = imagesRef.putBytes(data);
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                listener.onComplete(null);
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                    @Override
-//                    public void onSuccess(Uri uri) {
-//                        listener.onComplete(uri.toString());
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener) {
+        ImageUploader imageUploader = new ImageUploader(firebaseModel, "posts", name, bitmap, listener);
+        imageUploader.upload();
+    }
 }

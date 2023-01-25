@@ -1,5 +1,6 @@
 package com.example.t_r_ip.model;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -76,6 +77,10 @@ public class PostModel {
             refreshAllPosts();
             listener.onComplete(null);
         });
+    }
+
+    public void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener) {
+        postFirebaseModel.uploadImage(name, bitmap, listener);
     }
 
 }

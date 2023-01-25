@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.t_r_ip.model.utils.ImageUploader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -54,30 +55,8 @@ public class UserFirebaseModel extends FirebaseModel {
     }
 
     public void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener) {
-        StorageReference storageRef = firebaseModel.getStorage().getReference();
-        StorageReference imagesRef = storageRef.child("users/" + name + ".jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        UploadTask uploadTask = imagesRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                listener.onComplete(null);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Log.d("TAG", "URL: " + uri.toString());
-                        listener.onComplete(uri.toString());
-                    }
-                });
-            }
-        });
+        ImageUploader imageUploader = new ImageUploader(firebaseModel, "users", name, bitmap, listener);
+        imageUploader.upload();
     }
 
 }

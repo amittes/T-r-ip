@@ -82,7 +82,6 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
     }
 
     public void doOptionSelected (int index) {
-        Log.d("TAL", "option selected " + index);
         if (index==0) {
             setGalleryLauncher();
         } else {
@@ -106,7 +105,6 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
         });
 
         binding.profileImage.setOnClickListener(view -> {
-
             String title = "What would you like to do?";
             String[] options = {"Take picture from gallery", "Upload picture"};
             DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options );
@@ -124,15 +122,10 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
 
                 User user = new User(userModel.getCurrentUserId(), email, displayName, "");
 
-                Log.d("TAG", "current user " + user.toJson());
-
                 String password = binding.password.getText().toString();
                 if (!TextUtils.isEmpty(password)) {
                     userModel.updateUserPassword(password);
                 }
-
-                Log.d("TAG", "isAvatarSelected " + isAvatarSelected);
-
                 if (isAvatarSelected) {
                     binding.profileImage.setDrawingCacheEnabled(true);
                     binding.profileImage.buildDrawingCache();
@@ -147,7 +140,6 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                 } else {
                     userModel.getUserDataById(userModel.getCurrentUserId(), (userCurrentData) -> {
                         user.setProfilePictureUrl(userCurrentData.getProfilePictureUrl());
-                        Log.d("TAG", "current user 2 " + userCurrentData.toJson());
                         userModel.saveUser(user, (unused) -> {});
                     });
                 }
@@ -159,5 +151,4 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
 
         return binding.getRoot();
     }
-    
 }
