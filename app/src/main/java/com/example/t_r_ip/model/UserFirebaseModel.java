@@ -1,22 +1,14 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.t_r_ip.model.utils.ImageUploader;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.example.t_r_ip.model.entities.User;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 public class UserFirebaseModel extends FirebaseModel {
@@ -34,7 +26,6 @@ public class UserFirebaseModel extends FirebaseModel {
 
 
     public void saveUser (User user, Model.Listener<Void> listener) {
-        // refresh?
         firebaseModel.getDb().collection(User.COLLECTION).document(user.getId()).set(user.toJson())
                 .addOnCompleteListener(task -> { listener.onComplete(null); });
     }

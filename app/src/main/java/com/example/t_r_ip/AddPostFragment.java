@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +24,9 @@ import android.view.ViewGroup;
 
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.utils.AlertDialogFragment;
+import com.example.t_r_ip.model.utils.OptionsDialogFragment;
+import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
@@ -147,7 +149,8 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         }
         PostModel.instance().addPost(post, (unused) -> {});
 
-        new AlertDialogFragment().show(
-                getChildFragmentManager(), AlertDialogFragment.TAG);
+        String message = "Your post has been uploaded successfully";
+        DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
+        dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
     }
 }

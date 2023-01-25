@@ -1,8 +1,6 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -53,7 +51,6 @@ public class PostModel {
         Long localLastUpdate = Post.getLocalLastUpdate();
         postFirebaseModel.getAllPostsSince(localLastUpdate,list->{
             executor.execute(()->{
-                Log.d("TAG", " firebase return : " + list.size());
                 Long time = localLastUpdate;
                 for(Post post:list){
                     localDb.postDao().insertAll(post);

@@ -1,4 +1,4 @@
-package com.example.t_r_ip;
+package com.example.t_r_ip.model.utils;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,10 @@ import android.view.ViewGroup;
 import com.example.t_r_ip.databinding.FragmentSettingsBinding;
 import com.example.t_r_ip.model.entities.User;
 import com.example.t_r_ip.model.UserModel;
+import com.example.t_r_ip.model.utils.AlertDialogFragment;
+import com.example.t_r_ip.model.utils.ImageUploader;
+import com.example.t_r_ip.model.utils.OptionsDialogFragment;
+import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
 
 public class SettingsFragment extends Fragment implements OptionsDialogFragmentInterface {
@@ -144,8 +147,9 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                     });
                 }
 
-                new AlertDialogFragment().show(
-                        getChildFragmentManager(), AlertDialogFragment.TAG);
+                String message = "Your post has been uploaded successfully";
+                DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
+                dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
             }
         });
 
