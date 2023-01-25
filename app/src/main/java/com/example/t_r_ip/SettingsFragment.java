@@ -11,12 +11,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import androidx.core.view.MenuProvider;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,9 +27,13 @@ import android.view.ViewGroup;
 import com.example.t_r_ip.databinding.FragmentSettingsBinding;
 import com.example.t_r_ip.model.entities.User;
 import com.example.t_r_ip.model.UserModel;
+import com.example.t_r_ip.model.utils.AlertDialogFragment;
+import com.example.t_r_ip.model.utils.ImageUploader;
+import com.example.t_r_ip.model.utils.OptionsDialogFragment;
+import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements OptionsDialogFragmentInterface {
 
     FragmentSettingsBinding binding;
     ActivityResultLauncher<Void> cameraLauncher;
@@ -80,6 +84,14 @@ public class SettingsFragment extends Fragment {
         galleryLauncher.launch("image/*");
     }
 
+    public void doOptionSelected (int index) {
+        if (index==0) {
+            setGalleryLauncher();
+        } else {
+            setUploadPictureLauncher();
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,8 +108,10 @@ public class SettingsFragment extends Fragment {
         });
 
         binding.profileImage.setOnClickListener(view -> {
-            new ProfilePictureDialogFragment().show(
-                    getChildFragmentManager(), ProfilePictureDialogFragment.TAG);
+            String title = "What would you like to do?";
+            String[] options = {"Take picture from gallery", "Upload picture"};
+            DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options );
+            dialogFragment.show(getChildFragmentManager(), "SET_PROFILE_IMAGE_DIALOG");
         });
 
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
@@ -111,15 +125,10 @@ public class SettingsFragment extends Fragment {
 
                 User user = new User(userModel.getCurrentUserId(), email, displayName, "");
 
-                Log.d("TAG", "current user " + user.toJson());
-
                 String password = binding.password.getText().toString();
                 if (!TextUtils.isEmpty(password)) {
                     userModel.updateUserPassword(password);
                 }
-
-                Log.d("TAG", "isAvatarSelected " + isAvatarSelected);
-
                 if (isAvatarSelected) {
                     binding.profileImage.setDrawingCacheEnabled(true);
                     binding.profileImage.buildDrawingCache();
@@ -132,20 +141,18 @@ public class SettingsFragment extends Fragment {
                         userModel.saveUser(user, (unused) -> {});
                     });
                 } else {
-
                     userModel.getUserDataById(userModel.getCurrentUserId(), (userCurrentData) -> {
                         user.setProfilePictureUrl(userCurrentData.getProfilePictureUrl());
-                        Log.d("TAG", "current user 2 " + userCurrentData.toJson());
                         userModel.saveUser(user, (unused) -> {});
                     });
-
                 }
-                new AlertDialogFragment().show(
-                        getChildFragmentManager(), AlertDialogFragment.TAG);
+
+                String message = "Your post has been uploaded successfully";
+                DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
+                dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
             }
         });
 
         return binding.getRoot();
     }
-    
 }
