@@ -36,7 +36,7 @@ public class PostsListFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;
             }
-        },this, Lifecycle.State.RESUMED);
+        }, this, Lifecycle.State.RESUMED);
     }
 
     @Override

@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +49,7 @@ public class LocationModel {
                     Log.d("TAG", "----- searchLocation response error");
                 }
             }
+
             @Override
             public void onFailure(Call<LocationSearchResult> call, Throwable t) {
                 Log.d("TAG", "----- searchLocation fail");

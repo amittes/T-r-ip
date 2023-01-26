@@ -27,7 +27,7 @@ public class OptionsDialogFragment extends DialogFragment {
         builder.setTitle(title)
                 .setItems(options, (dialogInterface, i) -> {
                     if (getParentFragment() instanceof OptionsDialogFragmentInterface) {
-                        ((OptionsDialogFragmentInterface)getParentFragment()).doOptionSelected(i);
+                        ((OptionsDialogFragmentInterface) getParentFragment()).doOptionSelected(i);
                     }
                 });
         return builder.create();

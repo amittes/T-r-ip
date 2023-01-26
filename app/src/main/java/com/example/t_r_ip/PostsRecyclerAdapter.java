@@ -3,24 +3,21 @@ package com.example.t_r_ip;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.t_r_ip.model.entities.Post;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class PostViewHolder extends RecyclerView.ViewHolder{
-//    TextView nameTv;
+class PostViewHolder extends RecyclerView.ViewHolder {
+    //    TextView nameTv;
 //    TextView idTv;
 //    CheckBox cb;
     List<Post> data;
-//    ImageView avatarImage;
+
+    //    ImageView avatarImage;
     public PostViewHolder(@NonNull View itemView, PostsRecyclerAdapter.OnItemClickListener listener, List<Post> data) {
         super(itemView);
         this.data = data;
@@ -77,7 +74,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
         return 0;
     }
 
-    public static interface OnItemClickListener{
+    public static interface OnItemClickListener {
         void onItemClick(int pos);
     }
 }

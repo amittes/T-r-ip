@@ -20,16 +20,14 @@ public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 loginUserAccount();
             }
         });
@@ -44,8 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUserAccount()
-    {
+    private void loginUserAccount() {
 
         binding.progressBar.setVisibility(View.VISIBLE);
         String email, password;
@@ -73,8 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                         new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(
-                                    @NonNull Task<AuthResult> task)
-                            {
+                                    @NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(getApplicationContext(),
                                                     "Login successful!!",
@@ -86,9 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                                             = new Intent(LoginActivity.this,
                                             MainActivity.class);
                                     startActivity(intent);
-                                }
-
-                                else {
+                                } else {
                                     Toast.makeText(getApplicationContext(),
                                                     "Login failed!!",
                                                     Toast.LENGTH_LONG)

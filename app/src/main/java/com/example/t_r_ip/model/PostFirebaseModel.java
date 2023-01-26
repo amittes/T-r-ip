@@ -3,6 +3,7 @@ package com.example.t_r_ip.model;
 import static com.example.t_r_ip.model.entities.Post.LAST_UPDATED;
 
 import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 
 import com.example.t_r_ip.model.entities.Post;
@@ -21,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class PostFirebaseModel extends FirebaseModel{
+public class PostFirebaseModel extends FirebaseModel {
     private static final PostFirebaseModel _instance = new PostFirebaseModel();
 
     private FirebaseModel firebaseModel;
@@ -34,21 +35,21 @@ public class PostFirebaseModel extends FirebaseModel{
                 .create();
     }
 
-    public static PostFirebaseModel instance(){
+    public static PostFirebaseModel instance() {
         return _instance;
     }
 
-    public void getAllPostsSince(Long since, PostModel.Listener<List<Post>> callback){
+    public void getAllPostsSince(Long since, PostModel.Listener<List<Post>> callback) {
         firebaseModel.getDb().collection(Post.COLLECTION)
-                .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since,0))
+                .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since, 0))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         List<Post> list = new LinkedList<>();
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             QuerySnapshot jsonsList = task.getResult();
-                            for (DocumentSnapshot snapshot: jsonsList){
+                            for (DocumentSnapshot snapshot : jsonsList) {
                                 String json = gson.toJson(snapshot.getData());
                                 Post post = gson.fromJson(json, Post.class);
                                 Timestamp time = (Timestamp) snapshot.get(LAST_UPDATED);
@@ -63,7 +64,8 @@ public class PostFirebaseModel extends FirebaseModel{
 
     public void addPost(Post post, PostModel.Listener<Void> listener) {
         String jsonPost = gson.toJson(post);
-        Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>(){}.getType());
+        Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>() {
+        }.getType());
         mapPost.put(LAST_UPDATED, FieldValue.serverTimestamp());
         firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

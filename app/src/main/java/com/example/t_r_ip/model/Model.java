@@ -12,25 +12,24 @@ import java.util.concurrent.Executors;
 
 public class Model {
     private static final Model _instance = new Model();
-
+    public FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private Executor executor = Executors.newSingleThreadExecutor();
     private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
     private FirebaseModel firebaseModel = new FirebaseModel();
-    public FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-    public static Model instance(){
-        return _instance;
-    }
 
     private Model() {
     }
 
-    public interface Listener<T>{
-        void onComplete(T data);
+    public static Model instance() {
+        return _instance;
     }
-
 
     public FirebaseModel getFirebaseModel() {
         return firebaseModel;
+    }
+
+
+    public interface Listener<T> {
+        void onComplete(T data);
     }
 }

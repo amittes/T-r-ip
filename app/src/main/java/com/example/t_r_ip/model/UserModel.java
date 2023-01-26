@@ -1,8 +1,9 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.example.t_r_ip.model.entities.User;
+import com.google.firebase.auth.FirebaseUser;
 
 public class UserModel {
     private static final UserModel _instance = new UserModel();
@@ -15,7 +16,7 @@ public class UserModel {
         this.userFirebaseModel = UserFirebaseModel.instance();
     }
 
-    public static UserModel instance(){
+    public static UserModel instance() {
         return _instance;
     }
 
@@ -27,11 +28,11 @@ public class UserModel {
         return getCurrentUser().getUid();
     }
 
-    public void saveUser (User user, Model.Listener<Void> listener) {
+    public void saveUser(User user, Model.Listener<Void> listener) {
         userFirebaseModel.saveUser(user, listener);
     }
 
-    public void getUserDataById (String id, Model.Listener<User> listener) {
+    public void getUserDataById(String id, Model.Listener<User> listener) {
         userFirebaseModel.getUserDataById(id, listener);
     }
 
@@ -43,7 +44,7 @@ public class UserModel {
         userFirebaseModel.uploadImage(name, bitmap, listener);
     }
 
-    public void logOut () {
+    public void logOut() {
         model.mAuth.signOut();
     }
 }
