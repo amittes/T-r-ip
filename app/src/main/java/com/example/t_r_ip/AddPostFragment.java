@@ -103,7 +103,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         });
         binding.attachPostData.setOnClickListener(view -> {
             String title = "What would you like to do?";
-            String[] options = {"Take picture from gallery", "Upload picture", "Add location"};
+            String[] options = {"Take picture from gallery", "Upload picture"};
             DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options);
             dialogFragment.show(getChildFragmentManager(), "ATTACH_TO_POST_DIALOG");
         });
