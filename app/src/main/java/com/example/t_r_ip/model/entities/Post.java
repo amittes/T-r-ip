@@ -32,6 +32,8 @@ public class Post {
     private String postText;
     @Expose
     private String postPictureUrl;
+    @Expose
+    private String location;
     @Expose(deserialize = false)
     private long lastUpdated;
 
@@ -42,6 +44,7 @@ public class Post {
         this.authorPictureUrl = "";
         this.postText = "";
         this.postPictureUrl = "";
+        this.location = "";
     }
 
     public static Long getLocalLastUpdate() {
@@ -102,6 +105,14 @@ public class Post {
 
     public void setPostPictureUrl(String postUrl) {
         this.postPictureUrl = postUrl;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public long getLastUpdated() {

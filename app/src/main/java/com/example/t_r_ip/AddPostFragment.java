@@ -122,11 +122,11 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count != 0) {
-                    String locationForSearch = String.valueOf(binding.locationSearch.getText());
+                    String locationForSearch = binding.locationSearch.getText().toString();
                     LiveData<List<Location>> data = LocationModel.instance.searchLocationByName(locationForSearch);
+                    locations.clear();
                     data.observe(getViewLifecycleOwner(), list -> {
                         list.forEach(location -> {
-                            locations.clear();
                             locations.add(location.getFormatted());
                             Log.d("TAG", "got location: " + location.getFormatted());
                         });
@@ -182,10 +182,10 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         };
         Post post = new Post();
         post.setPostText(postInfo);
-        post.setPostPictureUrl("");
         post.setAuthorEmail(UserModel.instance().getCurrentUser().getEmail());
         post.setDisplayName(UserModel.instance().getCurrentUser().getDisplayName());
         post.setAuthorPictureUrl(String.valueOf(UserModel.instance().getCurrentUser().getPhotoUrl()));
+        post.setLocation(binding.locationSearch.getText().toString());
         if (isAvatarSelected) {
             binding.postImage.setDrawingCacheEnabled(true);
             binding.postImage.buildDrawingCache();
