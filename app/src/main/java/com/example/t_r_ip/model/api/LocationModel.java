@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,11 +21,12 @@ public class LocationModel {
     final public static LocationModel instance = new LocationModel();
 
     final String BASE_URL = "https://api.opencagedata.com/";
-    final String KEY = "your_api_key";
+    final String KEY = "071075bb21894de58c0238738d9e4a2c";
+    final int LIMIT = 5;
     Retrofit retrofit;
     OpenCageGeocoderAPI openCageGeocoderAPI;
 
-    private LocationModel(){
+    private LocationModel() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -35,27 +37,25 @@ public class LocationModel {
         openCageGeocoderAPI = retrofit.create(OpenCageGeocoderAPI.class);
     }
 
-    public LiveData<List<Location>> searchMoviesByTitle(String title){
+    public LiveData<List<Location>> searchLocationByName(String name) {
         MutableLiveData<List<Location>> data = new MutableLiveData<>();
-        Call<LocationSearchResult> call = openCageGeocoderAPI.search(title, KEY);
+        Call<LocationSearchResult> call = openCageGeocoderAPI.search(name, LIMIT, KEY);
         call.enqueue(new Callback<LocationSearchResult>() {
             @Override
             public void onResponse(Call<LocationSearchResult> call, Response<LocationSearchResult> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     LocationSearchResult res = response.body();
-                    data.setValue(res.getSearch());
-                }else{
-                    Log.d("TAG","----- searchLocation response error");
+                    data.setValue(res.getResults());
+                } else {
+                    Log.d("TAG", "----- searchLocation response error");
                 }
             }
-
             @Override
             public void onFailure(Call<LocationSearchResult> call, Throwable t) {
-                Log.d("TAG","----- searchLocation fail");
+                Log.d("TAG", "----- searchLocation fail");
             }
         });
         return data;
     }
-    
-    
 }
+

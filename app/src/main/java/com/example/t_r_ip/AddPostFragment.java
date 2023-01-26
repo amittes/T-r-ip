@@ -14,16 +14,25 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LiveData;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.api.Location;
+import com.example.t_r_ip.model.api.LocationModel;
 import com.example.t_r_ip.model.utils.AlertDialogFragment;
 import com.example.t_r_ip.model.utils.OptionsDialogFragment;
 import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
@@ -31,6 +40,8 @@ import com.squareup.picasso.Picasso;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
+
+import java.util.List;
 
 public class AddPostFragment extends Fragment implements OptionsDialogFragmentInterface {
 
@@ -104,6 +115,46 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                 sharePost(binding.postInfo.getText().toString());
             }
         });
+
+        binding.locationSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Send the API request when the user stops typing
+                if (count == 0) {
+                    String locationForSearch = String.valueOf(binding.locationSearch.getText());
+                        LiveData<List<Location>> data = LocationModel.instance.searchLocationByName(locationForSearch);
+                        data.observe(getViewLifecycleOwner(),list->{
+                            list.forEach(location->{
+                                Log.d("TAG","got location: " + location.getFormatted());
+                            });
+                        });
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+//        binding.locationSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                        String locationForSearch = String.valueOf(binding.locationSearch.getText());
+//                    LocationModel.instance.searchLocationByName("israel");
+////                        LiveData<List<Location>> data = LocationModel.instance.searchLocationByName("israel");
+////                        data.observe(getViewLifecycleOwner(),list->{
+////                            list.forEach(location->{
+////                                Log.d("TAG","got location: " + location.getFormattedAddress());
+////                            });
+////                        });
+//                } else {
+//                    // Do something here when the TextView loses focus
+//                }
+//            }
+//        });
         return binding.getRoot();
     }
 
@@ -153,4 +204,5 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
         dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
     }
+
 }

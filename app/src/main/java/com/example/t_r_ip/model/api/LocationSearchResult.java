@@ -5,14 +5,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class LocationSearchResult {
-    @SerializedName("Search")
-    List<Location> search;
+    List<Location> results;
 
-    public List<Location> getSearch() {
-        return search;
+    public List<Location> getResults() {
+        return results;
     }
 
-    public void setSearch(List<Location> search) {
-        this.search = search;
+    public void setResults(List<Location> search) {
+        this.results = results;
     }
 }
