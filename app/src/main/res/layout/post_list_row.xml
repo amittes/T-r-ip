@@ -7,7 +7,7 @@
     android:background="?attr/selectableItemBackground">
 
     <ImageView
-        android:id="@+id/studentlistrow_avatar_img"
+        android:id="@+id/postlistrow_profile_pic"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="10dp"
@@ -17,18 +17,18 @@
         app:srcCompat="@drawable/avatar" />
 
     <TextView
-        android:id="@+id/displayName"
+        android:id="@+id/postlistrow_displayName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="username"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/studentlistrow_id_tv"
-        app:layout_constraintStart_toEndOf="@+id/studentlistrow_avatar_img"
+        app:layout_constraintBottom_toTopOf="@+id/postlistrow_post_info"
+        app:layout_constraintStart_toEndOf="@+id/postlistrow_profile_pic"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/studentlistrow_id_tv"
+        android:id="@+id/postlistrow_post_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -37,5 +37,5 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/studentlistrow_avatar_img" />
+        app:layout_constraintTop_toBottomOf="@+id/postlistrow_profile_pic" />
 </androidx.constraintlayout.widget.ConstraintLayout>
