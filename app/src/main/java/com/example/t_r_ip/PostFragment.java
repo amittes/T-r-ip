@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +47,7 @@ public class PostFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding =  FragmentPostBinding.inflate(inflater, container, false);
-        binding.deletePost.setVisibility(View.INVISIBLE);
+        binding.editPost.setVisibility(View.INVISIBLE);
         binding.displayName.setText(post.getDisplayName());
         binding.location.setText(post.getLocation());
         binding.postInfo.setText(post.getPostText());
@@ -60,8 +59,9 @@ public class PostFragment extends Fragment {
         }
 
         if (UserModel.instance().getCurrentUser().getDisplayName().equals(post.getDisplayName())) {
-            binding.deletePost.setVisibility(View.VISIBLE);
-            binding.deletePost.setOnClickListener(view -> { post.setDeleted(true);});
+            binding.editPost.setVisibility(View.VISIBLE);
+            binding.editPost.setOnClickListener(view -> { //todo: editpost screen
+                 });
         }
         return binding.getRoot();
     }
