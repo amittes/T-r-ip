@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,15 +16,20 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 
+import com.example.t_r_ip.databinding.FragmentPostBinding;
+import com.example.t_r_ip.model.UserModel;
+import com.example.t_r_ip.model.entities.Post;
+import com.squareup.picasso.Picasso;
+
 public class PostFragment extends Fragment {
 
-    public static PostFragment newInstance() {
-        return new PostFragment();
-    }
+    private FragmentPostBinding binding;
+    private Post post;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        post = new Post();
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
@@ -41,6 +47,22 @@ public class PostFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_post, container, false);
+        binding =  FragmentPostBinding.inflate(inflater, container, false);
+        binding.deletePost.setVisibility(View.INVISIBLE);
+        binding.displayName.setText(post.getDisplayName());
+        binding.location.setText(post.getLocation());
+        binding.postInfo.setText(post.getPostText());
+        if (post.getAuthorPictureUrl() != "") {
+            Picasso.get().load(post.getAuthorPictureUrl()).into(binding.profileImage);
+        }
+        if (post.getPostPictureUrl() != "") {
+            Picasso.get().load(post.getPostPictureUrl()).into(binding.postImage);
+        }
+
+        if (UserModel.instance().getCurrentUser().getDisplayName().equals(post.getDisplayName())) {
+            binding.deletePost.setVisibility(View.VISIBLE);
+            binding.deletePost.setOnClickListener(view -> { post.setDeleted(true);});
+        }
+        return binding.getRoot();
     }
 }
