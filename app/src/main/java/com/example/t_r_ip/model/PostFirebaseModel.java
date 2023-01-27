@@ -54,7 +54,9 @@ public class PostFirebaseModel extends FirebaseModel {
                                 Post post = gson.fromJson(json, Post.class);
                                 Timestamp time = (Timestamp) snapshot.get(LAST_UPDATED);
                                 post.setLastUpdated(time.getSeconds());
-                                list.add(post);
+                                if(!post.isDeleted()) {
+                                    list.add(post);
+                                }
                             }
                         }
                         callback.onComplete(list);

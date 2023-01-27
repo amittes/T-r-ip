@@ -34,6 +34,8 @@ public class Post {
     private String postPictureUrl;
     @Expose
     private String location;
+    @Expose
+    private boolean isDeleted;
     @Expose(deserialize = false)
     private long lastUpdated;
 
@@ -45,6 +47,7 @@ public class Post {
         this.postText = "";
         this.postPictureUrl = "";
         this.location = "";
+        this.isDeleted = false;
     }
 
     public static Long getLocalLastUpdate() {
@@ -113,6 +116,14 @@ public class Post {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public long getLastUpdated() {
