@@ -23,6 +23,7 @@ public class AlertDialogFragment extends DialogFragment {
         String message = getArguments().getString("message");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message).setPositiveButton("OK", (DialogInterface dialogInterface, int i) -> {
+            getActivity().onBackPressed();
         });
         return builder.create();
     }

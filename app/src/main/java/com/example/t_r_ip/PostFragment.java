@@ -14,18 +14,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.t_r_ip.databinding.FragmentPostBinding;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
+import com.example.t_r_ip.model.utils.OptionsDialogFragment;
+import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
 
-public class PostFragment extends Fragment {
+public class PostFragment extends Fragment implements OptionsDialogFragmentInterface {
 
     private FragmentPostBinding binding;
     private PostsListFragmentViewModel viewModel;
@@ -67,7 +71,11 @@ public class PostFragment extends Fragment {
                 }
             });
 
-            binding.location.setText(post.getLocation());
+            if (!post.getLocation().isEmpty()) {
+                binding.location.setText(post.getLocation());
+            } else {
+                binding.location.setVisibility(View.INVISIBLE);
+            }
             binding.postInfo.setText(post.getPostText());
 
             if (!post.getPostPictureUrl().isEmpty()) {
@@ -76,8 +84,12 @@ public class PostFragment extends Fragment {
 
             if (UserModel.instance().getCurrentUserId().equals(post.getAuthorId())) {
                 binding.editPost.setVisibility(View.VISIBLE);
-                binding.editPost.setOnClickListener(view -> { //todo: editpost screen
-                     });
+                binding.editPost.setOnClickListener(view -> {
+                    String title = "What would you like to do?";
+                    String[] options = {"Edit post", "Delete post"};
+                    DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options);
+                    dialogFragment.show(getChildFragmentManager(), "EDIT_POST_DIALOG");
+                });
             }
         });
 
@@ -88,6 +100,7 @@ public class PostFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(() -> {
             reloadData();
         });
+
         return binding.getRoot();
     }
 
@@ -100,6 +113,21 @@ public class PostFragment extends Fragment {
     void reloadData() {
 //        binding.progressBar.setVisibility(View.VISIBLE);
         PostModel.instance().refreshPostById(postId);
+    }
+
+    @Override
+    public void doOptionSelected(int index) {
+        getActivity().onBackPressed();
+        if (index == 0) {
+            Log.d("TAG", "Edit option");
+            Bundle bundle = new Bundle();
+            bundle.putString("postId", postId);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_global_addPostFragment, bundle);
+        } else if (index == 1) {
+            viewModel.getPostById(postId).observe(getViewLifecycleOwner(), post -> {
+                PostModel.instance().removePost(post, unused -> {});
+            });
+        }
     }
 
 }

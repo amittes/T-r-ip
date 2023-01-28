@@ -149,7 +149,7 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                     });
                 }
 
-                String message = "Your post has been uploaded successfully";
+                String message = "Your profile has been updated successfully";
                 DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
                 dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
             }

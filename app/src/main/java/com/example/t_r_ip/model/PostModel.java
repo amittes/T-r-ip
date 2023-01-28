@@ -33,7 +33,7 @@ public class PostModel {
 
     public LiveData<List<Post>> getAllPosts() {
         if (postsList == null) {
-            postsList = localDb.postDao().getAll();
+            postsList = localDb.postDao().getAll(false);
             refreshAllPosts();
         }
         return postsList;
@@ -67,7 +67,9 @@ public class PostModel {
                     if (time < post.getLastUpdated()) {
                         time = post.getLastUpdated();
                     }
-                    localDb.postDao().insertAll(post);
+                    if (!post.isDeleted()) {
+                        localDb.postDao().insertAll(post);
+                    }
                 }
                 try {
                     Thread.sleep(3000);
@@ -128,8 +130,16 @@ public class PostModel {
         });
     }
 
-    public void addPost(Post st, Listener<Void> listener) {
-        postFirebaseModel.addPost(st, (Void) -> {
+    public void addPost(Post post, Listener<Void> listener) {
+        postFirebaseModel.addPost(post, (Void) -> {
+            refreshAllPosts();
+            listener.onComplete(null);
+        });
+    }
+
+    public void removePost(Post post, Listener<Void> listener) {
+        post.setDeleted(true);
+        postFirebaseModel.addPost(post, (Void) -> {
             refreshAllPosts();
             listener.onComplete(null);
         });

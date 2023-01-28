@@ -1,5 +1,6 @@
 package com.example.t_r_ip;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
 import com.example.t_r_ip.model.Model;
@@ -47,10 +49,12 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     private FragmentAddPostBinding binding;
     private ArrayAdapter<String> adapter;
     private List<String> locations = new ArrayList<>();
+    private PostsListFragmentViewModel viewModel;
 
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
     Boolean isAvatarSelected = false;
+    String currentPostId = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,11 +97,30 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-//        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
+        if (getArguments().getString("postId") != null) {
+            this.currentPostId = getArguments().getString("postId");
+            Log.d("TAL", "ADD POST, POST ID: " + currentPostId);
+        }
+
+        if (!currentPostId.isEmpty()) {
+            viewModel.getPostById(currentPostId).observe(getViewLifecycleOwner(), post -> {
+                binding.postInfo.setText(post.getPostText());
+                if (!post.getPostPictureUrl().isEmpty()) {
+                    isAvatarSelected = true;
+                    Picasso.get().load(post.getPostPictureUrl()).into(binding.postImage);
+                }
+                if (!post.getLocation().isEmpty()) {
+                    binding.locationSearch.setText(post.getLocation());
+                    binding.lvLocations.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
         UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user) -> {
             if (user != null) {
                 binding.displayName.setText(user.getDisplayName());
-                if (user.getProfilePictureUrl() != "") {
+                if (!user.getProfilePictureUrl().isEmpty()) {
                     Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
                 }
             }
@@ -112,9 +135,10 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         binding.shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sharePost(binding.postInfo.getText().toString());
+                sharePost(currentPostId);
             }
         });
+
 
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, locations);
         binding.lvLocations.setAdapter(adapter);
@@ -160,6 +184,12 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         return binding.getRoot();
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(PostsListFragmentViewModel.class);
+    }
+
     public void setUploadPictureLauncher() {
         cameraLauncher.launch(null);
     }
@@ -176,7 +206,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         }
     }
 
-    private void sharePost(String postInfo) {
+    private void sharePost(String postId) {
         Model.Listener<Void> listener = new Model.Listener<Void>() {
             @Override
             public void onComplete(Void aVoid) {
@@ -184,7 +214,11 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             }
         };
         Post post = new Post();
-        post.setPostText(postInfo);
+        if (!postId.isEmpty()) {
+            post.setId(postId);
+
+        }
+        post.setPostText(binding.postInfo.getText().toString());
         post.setPostPictureUrl("");
         post.setAuthorId(UserModel.instance().getCurrentUserId());
         post.setLocation(binding.locationSearch.getText().toString());

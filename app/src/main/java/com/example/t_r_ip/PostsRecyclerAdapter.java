@@ -23,6 +23,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
     TextView postInfo;
     ImageView profilePic;
     ImageView postPic;
+    TextView postLocation;
 
     List<Post> data;
 
@@ -34,6 +35,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         postInfo = itemView.findViewById(R.id.postlistrow_post_info);
         profilePic = itemView.findViewById(R.id.postlistrow_profile_pic);
         postPic = itemView.findViewById(R.id.postlistrow_post_image);
+        postLocation = itemView.findViewById(R.id.postlistrow_post_location);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +58,12 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         });
 
         postInfo.setText(post.getPostText());
+        Log.d("TAL", "post location " + post.getLocation());
+        if(post.getLocation().isEmpty()) {
+            postLocation.setVisibility(View.INVISIBLE);
+        } else {
+            postLocation.setText(post.getLocation());
+        }
         if (!post.getPostPictureUrl().isEmpty()) {
             postPic.setVisibility(View.VISIBLE);
             Picasso.get().load(post.getPostPictureUrl()).placeholder(postPic.getDrawable()).into(postPic);

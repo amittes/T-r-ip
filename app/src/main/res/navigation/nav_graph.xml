@@ -32,6 +32,10 @@
         android:id="@+id/addPostFragment"
         android:name="com.example.t_r_ip.AddPostFragment"
         android:label="Add Post"
-        tools:layout="@layout/fragment_add_post" /><action android:id="@+id/action_global_addPostFragment" app:destination="@id/addPostFragment"/>
+        tools:layout="@layout/fragment_add_post" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment><action android:id="@+id/action_global_addPostFragment" app:destination="@id/addPostFragment"/>
     <action android:id="@+id/action_global_postFragment" app:destination="@id/postFragment" />
 </navigation>
