@@ -44,12 +44,13 @@ import java.util.List;
 
 public class AddPostFragment extends Fragment implements OptionsDialogFragmentInterface {
 
-    ActivityResultLauncher<Void> cameraLauncher;
-    ActivityResultLauncher<String> galleryLauncher;
-    Boolean isAvatarSelected = false;
     private FragmentAddPostBinding binding;
     private ArrayAdapter<String> adapter;
     private List<String> locations = new ArrayList<>();
+
+    ActivityResultLauncher<Void> cameraLauncher;
+    ActivityResultLauncher<String> galleryLauncher;
+    Boolean isAvatarSelected = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -182,9 +183,8 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         };
         Post post = new Post();
         post.setPostText(postInfo);
-        post.setAuthorEmail(UserModel.instance().getCurrentUser().getEmail());
-        post.setDisplayName(UserModel.instance().getCurrentUser().getDisplayName());
-        post.setAuthorPictureUrl(String.valueOf(UserModel.instance().getCurrentUser().getPhotoUrl()));
+        post.setPostPictureUrl("");
+        post.setAuthorId(UserModel.instance().getCurrentUserId());
         post.setLocation(binding.locationSearch.getText().toString());
         if (isAvatarSelected) {
             binding.postImage.setDrawingCacheEnabled(true);
@@ -194,16 +194,13 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                 if (url != null) {
                     post.setPostPictureUrl(url);
                 }
-                PostModel.instance().addPost(post, (unused) -> {
-                });
+                PostModel.instance().addPost(post, (unused) -> {});
             });
         }
-        PostModel.instance().addPost(post, (unused) -> {
-        });
+        PostModel.instance().addPost(post, (unused) -> {});
 
         String message = "Your post has been uploaded successfully";
         DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
         dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
     }
-
 }

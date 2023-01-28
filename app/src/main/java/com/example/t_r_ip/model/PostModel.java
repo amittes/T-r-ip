@@ -1,7 +1,6 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 

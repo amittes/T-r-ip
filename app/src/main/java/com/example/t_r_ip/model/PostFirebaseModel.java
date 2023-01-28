@@ -3,7 +3,6 @@ package com.example.t_r_ip.model;
 import static com.example.t_r_ip.model.entities.Post.LAST_UPDATED;
 
 import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 
 import com.example.t_r_ip.model.entities.Post;

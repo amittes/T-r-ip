@@ -30,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.main_bottomNavigationView);
         NavigationUI.setupWithNavController(navView, navController);
 
-        FirebaseUser currentUser = UserModel.instance().getCurrentUser();
-        if (currentUser == null) {
+        if (UserModel.instance().getCurrentUserId() == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

@@ -104,7 +104,7 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                 }
             }
         });
-
+//
         binding.profileImage.setOnClickListener(view -> {
             String title = "What would you like to do?";
             String[] options = {"Take picture from gallery", "Upload picture"};

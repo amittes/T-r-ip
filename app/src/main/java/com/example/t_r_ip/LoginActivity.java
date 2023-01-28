@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.t_r_ip.databinding.ActivityLoginBinding;
 import com.example.t_r_ip.model.Model;
+import com.example.t_r_ip.model.UserModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(
                                     @NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    UserModel.instance().logIn();
                                     Toast.makeText(getApplicationContext(),
                                                     "Login successful!!",
                                                     Toast.LENGTH_LONG)

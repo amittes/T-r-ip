@@ -23,11 +23,7 @@ public class Post {
     @Expose
     private String id;
     @Expose
-    private String authorEmail;
-    @Expose
-    private String displayName;
-    @Expose
-    private String authorPictureUrl;
+    private String authorId;
     @Expose
     private String postText;
     @Expose
@@ -41,13 +37,23 @@ public class Post {
 
     public Post() {
         this.id = String.valueOf(UUID.randomUUID());
-        this.authorEmail = "";
-        this.displayName = "";
-        this.authorPictureUrl = "";
+        this.authorId = "";
         this.postText = "";
         this.postPictureUrl = "";
         this.location = "";
         this.isDeleted = false;
+    }
+
+    public static Long getLocalLastUpdate() {
+        SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
+        return sharedPref.getLong(LOCAL_LAST_UPDATED, 0);
+    }
+
+    public static void setLocalLastUpdate(Long time) {
+        SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(LOCAL_LAST_UPDATED, time);
+        editor.commit();
     }
 
     public static Long getLocalLastUpdate() {
@@ -70,28 +76,12 @@ public class Post {
         this.id = id;
     }
 
-    public String getAuthorEmail() {
-        return authorEmail;
+    public String getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthorEmail(String authorEmail) {
-        this.authorEmail = authorEmail;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getAuthorPictureUrl() {
-        return authorPictureUrl;
-    }
-
-    public void setAuthorPictureUrl(String authorPictureUrl) {
-        this.authorPictureUrl = authorPictureUrl;
+    public void setAuthorId(String authorEmail) {
+        this.authorId = authorEmail;
     }
 
     public String getPostText() {
