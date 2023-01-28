@@ -1,6 +1,7 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -12,10 +13,10 @@ import java.util.concurrent.Executors;
 
 public class PostModel {
     private static final PostModel _instance = new PostModel();
-
-    private Executor executor;
-    private PostFirebaseModel postFirebaseModel;
-    private AppLocalDbRepository localDb;
+    final public MutableLiveData<LoadingState> EventPostsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
+    private final Executor executor;
+    private final PostFirebaseModel postFirebaseModel;
+    private final AppLocalDbRepository localDb;
     private LiveData<List<Post>> postsList;
 
     private PostModel() {
@@ -24,22 +25,12 @@ public class PostModel {
         this.localDb = AppLocalDb.getAppDb();
     }
 
-    public static PostModel instance(){
+    public static PostModel instance() {
         return _instance;
     }
 
-    public enum LoadingState{
-        LOADING,
-        NOT_LOADING
-    }
-    final public MutableLiveData<LoadingState> EventPostsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
-
-    public interface Listener<T>{
-        void onComplete(T data);
-    }
-
     public LiveData<List<Post>> getAllPosts() {
-        if(postsList == null){
+        if (postsList == null) {
             postsList = localDb.postDao().getAll();
             refreshAllPosts();
         }
@@ -49,12 +40,12 @@ public class PostModel {
     public void refreshAllPosts() {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
-        postFirebaseModel.getAllPostsSince(localLastUpdate,list->{
-            executor.execute(()->{
+        postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
+            executor.execute(() -> {
                 Long time = localLastUpdate;
-                for(Post post:list){
+                for (Post post : list) {
                     localDb.postDao().insertAll(post);
-                    if (time < post.getLastUpdated()){
+                    if (time < post.getLastUpdated()) {
                         time = post.getLastUpdated();
                     }
                 }
@@ -69,8 +60,8 @@ public class PostModel {
         });
     }
 
-    public void addPost(Post st, Listener<Void> listener){
-        postFirebaseModel.addPost(st,(Void)-> {
+    public void addPost(Post st, Listener<Void> listener) {
+        postFirebaseModel.addPost(st, (Void) -> {
             refreshAllPosts();
             listener.onComplete(null);
         });
@@ -78,6 +69,15 @@ public class PostModel {
 
     public void uploadImage(String name, Bitmap bitmap, Model.Listener<String> listener) {
         postFirebaseModel.uploadImage(name, bitmap, listener);
+    }
+
+    public enum LoadingState {
+        LOADING,
+        NOT_LOADING
+    }
+
+    public interface Listener<T> {
+        void onComplete(T data);
     }
 
 }

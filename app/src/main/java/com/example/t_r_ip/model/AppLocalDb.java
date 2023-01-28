@@ -8,12 +8,15 @@ import com.example.t_r_ip.MyApplication;
 import com.example.t_r_ip.model.daos.PostDao;
 import com.example.t_r_ip.model.entities.Post;
 
-@Database(entities = {Post.class}, version = 1)
+@Database(entities = {Post.class}, version = 3)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PostDao postDao();
 }
 
-public class AppLocalDb{
+public class AppLocalDb {
+    private AppLocalDb() {
+    }
+
     static public AppLocalDbRepository getAppDb() {
         return Room.databaseBuilder(MyApplication.getMyContext(),
                         AppLocalDbRepository.class,
@@ -21,7 +24,5 @@ public class AppLocalDb{
                 .fallbackToDestructiveMigration()
                 .build();
     }
-
-    private AppLocalDb(){}
 }
 

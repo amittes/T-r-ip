@@ -10,7 +10,7 @@ public class UserFirebaseModel {
     private static FirebaseFirestore db;
     private static FirebaseStorage storage;
 
-    public static UserFirebaseModel instance(){
+    public static UserFirebaseModel instance() {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false)
