@@ -1,6 +1,7 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,10 +15,11 @@ import java.util.concurrent.Executors;
 public class PostModel {
     private static final PostModel _instance = new PostModel();
     final public MutableLiveData<LoadingState> EventPostsListLoadingState = new MutableLiveData<LoadingState>(LoadingState.NOT_LOADING);
-    private final Executor executor;
-    private final PostFirebaseModel postFirebaseModel;
-    private final AppLocalDbRepository localDb;
+    private Executor executor;
+    private PostFirebaseModel postFirebaseModel;
+    private AppLocalDbRepository localDb;
     private LiveData<List<Post>> postsList;
+    private LiveData<List<Post>> userPostsList;
 
     private PostModel() {
         this.executor = Executors.newSingleThreadExecutor();
@@ -37,7 +39,45 @@ public class PostModel {
         return postsList;
     }
 
+    public LiveData<List<Post>> getUserPosts(String id) {
+        if (userPostsList == null) {
+            userPostsList = localDb.postDao().getPostsByAuthorId(id);
+            refreshAllUserPosts();
+        }
+        return postsList;
+    }
+
+    public LiveData<Post> getPostById(String id) {
+        LiveData<Post> post = localDb.postDao().getPostById(id);
+        refreshPostById(id);
+        return post;
+    }
+
     public void refreshAllPosts() {
+        EventPostsListLoadingState.setValue(LoadingState.LOADING);
+        Long localLastUpdate = Post.getLocalLastUpdate();
+        Log.d("TAL", "localLastUpdate " + localLastUpdate);
+        postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
+            executor.execute(() -> {
+                Long time = localLastUpdate;
+                for (Post post : list) {
+                    if (time < post.getLastUpdated()) {
+                        time = post.getLastUpdated();
+                    }
+                    localDb.postDao().insertAll(post);
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Post.setLocalLastUpdate(time);
+                EventPostsListLoadingState.postValue(LoadingState.NOT_LOADING);
+            });
+        });
+    }
+
+    public void refreshAllUserPosts() {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
         postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
@@ -57,6 +97,31 @@ public class PostModel {
                 Post.setLocalLastUpdate(time);
                 EventPostsListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
+        });
+    }
+
+   public void refreshPostById(String id) {
+        EventPostsListLoadingState.setValue(LoadingState.LOADING);
+        Long localLastUpdate = Post.getLocalLastUpdate();
+        Log.d("TAL", "localLastUpdate " + localLastUpdate );
+        postFirebaseModel.getPostByIdSince(id, localLastUpdate, post -> {
+            if (post != null) {
+                executor.execute(() -> {
+                    Long time = localLastUpdate;
+                    localDb.postDao().insertAll(post);
+                    if (time < post.getLastUpdated()) {
+                        time = post.getLastUpdated();
+                    }
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Post.setLocalLastUpdate(time);
+                    EventPostsListLoadingState.postValue(LoadingState.NOT_LOADING);
+                });
+            }
+
         });
     }
 

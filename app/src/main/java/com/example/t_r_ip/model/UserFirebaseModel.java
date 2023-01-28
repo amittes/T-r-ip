@@ -1,6 +1,7 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 public class UserFirebaseModel extends FirebaseModel {
     private static final UserFirebaseModel _instance = new UserFirebaseModel();
 
-    private final FirebaseModel firebaseModel;
+    private FirebaseModel firebaseModel;
 
     private UserFirebaseModel() {
         this.firebaseModel = FirebaseModel.instance();
@@ -27,24 +28,24 @@ public class UserFirebaseModel extends FirebaseModel {
 
 
     public void saveUser(User user, Model.Listener<Void> listener) {
-        getDb().collection(User.COLLECTION).document(user.getId()).set(user.toJson())
+        firebaseModel.getDb().collection(User.COLLECTION).document(user.getId()).set(user.toJson())
                 .addOnCompleteListener(task -> {
                     listener.onComplete(null);
                 });
     }
 
     public void getUserDataById(String id, Model.Listener<User> listener) {
-        getDb().collection(User.COLLECTION).document(id).get()
+        firebaseModel.getDb().collection(User.COLLECTION).document(id).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                           @Override
-                                           public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                               if (task.isSuccessful() && task.getResult() != null && task.getResult().getData() != null) {
-                                                   Map<String, Object> document = task.getResult().getData();
-                                                   User user = User.fromJson(document);
-                                                   listener.onComplete(user);
-                                               }
-                                           }
-                                       }
+                       @Override
+                       public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                           if (task.isSuccessful() && task.getResult() != null && task.getResult().getData() != null) {
+                               Map<String, Object> document = task.getResult().getData();
+                               User user = User.fromJson(document);
+                               listener.onComplete(user);
+                           }
+                       }
+                   }
                 );
     }
 

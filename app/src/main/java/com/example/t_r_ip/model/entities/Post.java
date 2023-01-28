@@ -17,7 +17,7 @@ public class Post {
 
     public static final String COLLECTION = "posts";
     public static final String LAST_UPDATED = "lastUpdated";
-    private static final String LOCAL_LAST_UPDATED = "students_local_last_update";
+    private static final String LOCAL_LAST_UPDATED = "posts_local_last_update";
     @PrimaryKey
     @NonNull
     @Expose
@@ -28,6 +28,10 @@ public class Post {
     private String postText;
     @Expose
     private String postPictureUrl;
+    @Expose
+    private String location;
+    @Expose
+    private boolean isDeleted;
     @Expose(deserialize = false)
     private long lastUpdated;
 
@@ -36,6 +40,8 @@ public class Post {
         this.authorId = "";
         this.postText = "";
         this.postPictureUrl = "";
+        this.location = "";
+        this.isDeleted = false;
     }
 
     public static Long getLocalLastUpdate() {
@@ -80,6 +86,22 @@ public class Post {
 
     public void setPostPictureUrl(String postUrl) {
         this.postPictureUrl = postUrl;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public long getLastUpdated() {

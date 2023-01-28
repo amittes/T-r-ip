@@ -1,8 +1,10 @@
 package com.example.t_r_ip.model;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.example.t_r_ip.model.entities.User;
+import com.google.firebase.auth.FirebaseUser;
 
 public class UserModel {
     private static final UserModel _instance = new UserModel();
@@ -14,17 +16,24 @@ public class UserModel {
     private UserModel() {
         this.model = Model.instance();
         this.userFirebaseModel = UserFirebaseModel.instance();
-        this.userFirebaseModel.getUserDataById(getCurrentUserId(), user -> {
-            this.currentUser = user;
-        });
+//        this.userFirebaseModel.getUserDataById(getCurrentUserId(), user -> {
+//            this.currentUser = user;
+//        });
     }
 
     public static UserModel instance() {
         return _instance;
     }
 
-    public User getCurrentUser() {
-        return this.currentUser;
+    public boolean isUserConnected() {
+        if (Model.instance().mAuth.getCurrentUser() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getCurrentUserEmail() {
+        return model.mAuth.getCurrentUser().getEmail();
     }
 
     public String getCurrentUserId() {
@@ -54,7 +63,9 @@ public class UserModel {
     }
 
     public void logIn() {
+        Log.d("TAL", "log in " + getCurrentUserId());
         this.userFirebaseModel.getUserDataById(getCurrentUserId(), user -> {
+            Log.d("TAL", "user log in " + user.getEmail());
             this.currentUser = user;
         });
     }

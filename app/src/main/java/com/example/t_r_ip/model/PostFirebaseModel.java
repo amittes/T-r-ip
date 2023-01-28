@@ -3,6 +3,7 @@ package com.example.t_r_ip.model;
 import static com.example.t_r_ip.model.entities.Post.LAST_UPDATED;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -25,8 +26,8 @@ import java.util.Map;
 public class PostFirebaseModel extends FirebaseModel {
     private static final PostFirebaseModel _instance = new PostFirebaseModel();
 
-    private final FirebaseModel firebaseModel;
-    private final Gson gson;
+    private FirebaseModel firebaseModel;
+    private Gson gson;
 
     private PostFirebaseModel() {
         this.firebaseModel = FirebaseModel.instance();
@@ -40,7 +41,7 @@ public class PostFirebaseModel extends FirebaseModel {
     }
 
     public void getAllPostsSince(Long since, PostModel.Listener<List<Post>> callback) {
-        getDb().collection(Post.COLLECTION)
+        firebaseModel.getDb().collection(Post.COLLECTION)
                 .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since, 0))
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -54,10 +55,61 @@ public class PostFirebaseModel extends FirebaseModel {
                                 Post post = gson.fromJson(json, Post.class);
                                 Timestamp time = (Timestamp) snapshot.get(LAST_UPDATED);
                                 post.setLastUpdated(time.getSeconds());
-                                list.add(post);
+                                if(!post.isDeleted()) {
+                                    list.add(post);
+                                }
                             }
                         }
+                        Log.d("TAL", "receive " + list.size() + " documents from firebase");
                         callback.onComplete(list);
+                    }
+                });
+    }
+
+    public void getAllUserPostsSince(String id, Long since, PostModel.Listener<List<Post>> callback) {
+        firebaseModel.getDb().collection(Post.COLLECTION)
+                .whereEqualTo("authorId", id)
+                .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since, 0))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<Post> list = new LinkedList<>();
+                        if (task.isSuccessful()) {
+                            QuerySnapshot jsonsList = task.getResult();
+                            for (DocumentSnapshot snapshot : jsonsList) {
+                                String json = gson.toJson(snapshot.getData());
+                                Post post = gson.fromJson(json, Post.class);
+                                Timestamp time = (Timestamp) snapshot.get(LAST_UPDATED);
+                                post.setLastUpdated(time.getSeconds());
+                                if(!post.isDeleted()) {
+                                    list.add(post);
+                                }
+                            }
+                        }
+                        Log.d("TAL", "receive " + list.size() + " documents from firebase to user posts");
+                        callback.onComplete(list);
+                    }
+                });
+    }
+
+    public void getPostByIdSince(String id, Long since, PostModel.Listener<Post> callback) {
+        firebaseModel.getDb().collection(Post.COLLECTION)
+                .whereEqualTo("id", id)
+                .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since, 0))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        Post post = new Post();
+                        if (task.isSuccessful()) {
+                            QuerySnapshot snapshot  = task.getResult();
+                            String json = gson.toJson(snapshot.getDocuments().get(0));
+                            post = gson.fromJson(json, Post.class);
+                            Timestamp time = (Timestamp) snapshot.getDocuments().get(0).get(LAST_UPDATED);
+                            post.setLastUpdated(time.getSeconds());
+                        }
+                        callback.onComplete(post);
                     }
                 });
     }
@@ -67,7 +119,7 @@ public class PostFirebaseModel extends FirebaseModel {
         Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>() {
         }.getType());
         mapPost.put(LAST_UPDATED, FieldValue.serverTimestamp());
-        getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
+        firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

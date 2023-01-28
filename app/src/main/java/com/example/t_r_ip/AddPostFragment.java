@@ -4,12 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,23 +25,32 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LiveData;
 
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
 import com.example.t_r_ip.model.Model;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
+import com.example.t_r_ip.model.api.Location;
+import com.example.t_r_ip.model.api.LocationModel;
 import com.example.t_r_ip.model.entities.Post;
 import com.example.t_r_ip.model.utils.AlertDialogFragment;
 import com.example.t_r_ip.model.utils.OptionsDialogFragment;
 import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddPostFragment extends Fragment implements OptionsDialogFragmentInterface {
+
+    private FragmentAddPostBinding binding;
+    private ArrayAdapter<String> adapter;
+    private List<String> locations = new ArrayList<>();
 
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
     Boolean isAvatarSelected = false;
-    private FragmentAddPostBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +93,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
+//        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
         UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user) -> {
             if (user != null) {
                 binding.displayName.setText(user.getDisplayName());
@@ -90,7 +104,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         });
         binding.attachPostData.setOnClickListener(view -> {
             String title = "What would you like to do?";
-            String[] options = {"Take picture from gallery", "Upload picture", "Add location"};
+            String[] options = {"Take picture from gallery", "Upload picture"};
             DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options);
             dialogFragment.show(getChildFragmentManager(), "ATTACH_TO_POST_DIALOG");
         });
@@ -101,6 +115,46 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                 sharePost(binding.postInfo.getText().toString());
             }
         });
+
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, locations);
+        binding.lvLocations.setAdapter(adapter);
+
+        binding.locationSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count != 0) {
+                    String locationForSearch = binding.locationSearch.getText().toString();
+                    LiveData<List<Location>> data = LocationModel.instance.searchLocationByName(locationForSearch);
+                    locations.clear();
+                    data.observe(getViewLifecycleOwner(), list -> {
+                        list.forEach(location -> {
+                            locations.add(location.getFormatted());
+                            Log.d("TAG", "got location: " + location.getFormatted());
+                        });
+                    });
+                    adapter.notifyDataSetChanged();
+                    binding.lvLocations.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        binding.lvLocations.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedLocation = locations.get(position);
+                binding.locationSearch.setText(selectedLocation);
+                binding.lvLocations.setVisibility(View.GONE);
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -131,6 +185,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         post.setPostText(postInfo);
         post.setPostPictureUrl("");
         post.setAuthorId(UserModel.instance().getCurrentUserId());
+        post.setLocation(binding.locationSearch.getText().toString());
         if (isAvatarSelected) {
             binding.postImage.setDrawingCacheEnabled(true);
             binding.postImage.buildDrawingCache();
@@ -139,12 +194,10 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                 if (url != null) {
                     post.setPostPictureUrl(url);
                 }
-                PostModel.instance().addPost(post, (unused) -> {
-                });
+                PostModel.instance().addPost(post, (unused) -> {});
             });
         }
-        PostModel.instance().addPost(post, (unused) -> {
-        });
+        PostModel.instance().addPost(post, (unused) -> {});
 
         String message = "Your post has been uploaded successfully";
         DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);

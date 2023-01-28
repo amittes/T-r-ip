@@ -1,6 +1,7 @@
 package com.example.t_r_ip;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.t_r_ip.model.entities.Post;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 class PostViewHolder extends RecyclerView.ViewHolder {
     TextView displayName;
@@ -32,15 +34,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         postInfo = itemView.findViewById(R.id.postlistrow_post_info);
         profilePic = itemView.findViewById(R.id.postlistrow_profile_pic);
         postPic = itemView.findViewById(R.id.postlistrow_post_image);
-//        cb = itemView.findViewById(R.id.studentlistrow_cb);
-//        cb.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                int pos = (int)cb.getTag();
-//                Student st = data.get(pos);
-//                st.cb = cb.isChecked();
-//            }
-//        });
+
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,7 +45,8 @@ class PostViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Post post, int pos) {
-        UserModel.instance().getUserDataById(post.getAuthorId(), user -> {
+        String postAuthorId = post.getAuthorId();
+        UserModel.instance().getUserDataById(postAuthorId, user -> {
             displayName.setText(user.getDisplayName());
             if (!user.getProfilePictureUrl().isEmpty()) {
                 Picasso.get().load(user.getProfilePictureUrl()).placeholder(R.drawable.avatar).into(profilePic);
@@ -80,7 +75,8 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void setData(List<Post> data) {
-        this.data = data;
+        this.data = data.stream().filter(post -> !post.getAuthorId().isEmpty()).collect(Collectors.toList()); // firebase is a shit
+        Log.d("TAL", "view model size " + this.data.size());
         notifyDataSetChanged();
     }
 

@@ -13,9 +13,9 @@ import java.util.concurrent.Executors;
 public class Model {
     private static final Model _instance = new Model();
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private final Executor executor = Executors.newSingleThreadExecutor();
-    private final Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
-    private final FirebaseModel firebaseModel = new FirebaseModel();
+    private Executor executor = Executors.newSingleThreadExecutor();
+    private Handler mainHandler = HandlerCompat.createAsync(Looper.getMainLooper());
+    private FirebaseModel firebaseModel = new FirebaseModel();
 
     private Model() {
     }
