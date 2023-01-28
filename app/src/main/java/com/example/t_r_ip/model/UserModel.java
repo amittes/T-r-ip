@@ -12,12 +12,10 @@ public class UserModel {
     private final Model model;
     private final UserFirebaseModel userFirebaseModel;
     private User currentUser;
-    private boolean isUserConnected;
 
     private UserModel() {
         this.model = Model.instance();
         this.userFirebaseModel = UserFirebaseModel.instance();
-        this.isUserConnected = false;
 //        this.userFirebaseModel.getUserDataById(getCurrentUserId(), user -> {
 //            this.currentUser = user;
 //        });
@@ -34,8 +32,8 @@ public class UserModel {
         return true;
     }
 
-    public User getCurrentUser() {
-        return this.currentUser;
+    public String getCurrentUserEmail() {
+        return model.mAuth.getCurrentUser().getEmail();
     }
 
     public String getCurrentUserId() {

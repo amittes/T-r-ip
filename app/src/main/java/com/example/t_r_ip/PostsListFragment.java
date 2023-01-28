@@ -25,6 +25,8 @@ import com.example.t_r_ip.databinding.FragmentPostsListBinding;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.entities.Post;
 
+import java.util.stream.Collectors;
+
 public class PostsListFragment extends Fragment {
     PostsRecyclerAdapter adapter;
     PostsListFragmentViewModel viewModel;
@@ -63,7 +65,8 @@ public class PostsListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-                Post post = viewModel.getData().getValue().get(pos);
+                Post post = viewModel.getData().getValue().stream().filter(post1 -> !post1.getAuthorId().isEmpty()).collect(Collectors.toList()).get(pos);
+                Log.d("TAL", "selected post "+post.getPostText());
                 PostsListFragmentDirections.ActionPostsListFragmentToPostFragment action = PostsListFragmentDirections.actionPostsListFragmentToPostFragment(post.getId());
                 Navigation.findNavController(view).navigate(action);
             }

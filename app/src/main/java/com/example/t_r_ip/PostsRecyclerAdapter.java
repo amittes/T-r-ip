@@ -16,6 +16,7 @@ import com.example.t_r_ip.model.entities.Post;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 class PostViewHolder extends RecyclerView.ViewHolder {
     TextView displayName;
@@ -45,17 +46,14 @@ class PostViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(Post post, int pos) {
         String postAuthorId = post.getAuthorId();
-        if (!postAuthorId.isEmpty()) {
-            UserModel.instance().getUserDataById(postAuthorId, user -> {
-                displayName.setText(user.getDisplayName());
-                if (!user.getProfilePictureUrl().isEmpty()) {
-                    Picasso.get().load(user.getProfilePictureUrl()).placeholder(R.drawable.avatar).into(profilePic);
-                } else {
-                    profilePic.setImageResource(R.drawable.avatar);
-                }
-            });
-
-        }
+        UserModel.instance().getUserDataById(postAuthorId, user -> {
+            displayName.setText(user.getDisplayName());
+            if (!user.getProfilePictureUrl().isEmpty()) {
+                Picasso.get().load(user.getProfilePictureUrl()).placeholder(R.drawable.avatar).into(profilePic);
+            } else {
+                profilePic.setImageResource(R.drawable.avatar);
+            }
+        });
 
         postInfo.setText(post.getPostText());
         if (!post.getPostPictureUrl().isEmpty()) {
@@ -77,8 +75,8 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void setData(List<Post> data) {
-        this.data = data;
-        Log.d("TAL", "view model size " + data.size());
+        this.data = data.stream().filter(post -> !post.getAuthorId().isEmpty()).collect(Collectors.toList()); // firebase is a shit
+        Log.d("TAL", "view model size " + this.data.size());
         notifyDataSetChanged();
     }
 

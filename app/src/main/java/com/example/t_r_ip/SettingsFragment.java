@@ -116,11 +116,11 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
             @Override
             public void onClick(View v) {
                 UserModel userModel = UserModel.instance();
-                String email = userModel.getCurrentUser().getEmail();
+                String email = userModel.getCurrentUserEmail();
                 String displayName = binding.displayName.getText().toString();
 
-                if (displayName == "") {
-                    displayName = userModel.getCurrentUser().getDisplayName();
+                if (displayName.isEmpty()) {
+                    displayName = binding.displayName.getHint().toString();
                 }
 
                 User user = new User(userModel.getCurrentUserId(), email, displayName, "");

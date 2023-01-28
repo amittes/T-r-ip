@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.main_bottomNavigationView);
         NavigationUI.setupWithNavController(navView, navController);
-        Log.d("TAL", "current user "+ UserModel.instance().getCurrentUser() );
+//        Log.d("TAL", "current user "+ UserModel.instance().getCurrentUser() );
 
         if (!UserModel.instance().isUserConnected()) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);

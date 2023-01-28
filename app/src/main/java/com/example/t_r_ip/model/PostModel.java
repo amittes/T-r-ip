@@ -56,14 +56,15 @@ public class PostModel {
     public void refreshAllPosts() {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
+        Log.d("TAL", "localLastUpdate " + localLastUpdate);
         postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
             executor.execute(() -> {
                 Long time = localLastUpdate;
                 for (Post post : list) {
-                    localDb.postDao().insertAll(post);
                     if (time < post.getLastUpdated()) {
                         time = post.getLastUpdated();
                     }
+                    localDb.postDao().insertAll(post);
                 }
                 try {
                     Thread.sleep(3000);
@@ -102,6 +103,7 @@ public class PostModel {
    public void refreshPostById(String id) {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
+        Log.d("TAL", "localLastUpdate " + localLastUpdate );
         postFirebaseModel.getPostByIdSince(id, localLastUpdate, post -> {
             if (post != null) {
                 executor.execute(() -> {

@@ -93,7 +93,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
-        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
+//        binding.displayName.setText(UserModel.instance().getCurrentUser().getDisplayName());
         UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user) -> {
             if (user != null) {
                 binding.displayName.setText(user.getDisplayName());

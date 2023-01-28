@@ -57,7 +57,10 @@ public class PostFragment extends Fragment {
         postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
         binding.progressBar.setVisibility(View.GONE);
 
+        Log.d("TAL", "post id from action" + postId);
+
         viewModel.getPostById(postId).observe(getViewLifecycleOwner(), post -> {
+            Log.d("TAL", "post is ???" + post.getPostText());
             binding.postInfo.setText(post.getPostText());
 
             UserModel.instance().getUserDataById(post.getAuthorId(), user -> {
