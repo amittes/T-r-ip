@@ -116,7 +116,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             }
         });
 
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, locations);
+        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, locations);
         binding.lvLocations.setAdapter(adapter);
 
         binding.locationSearch.addTextChangedListener(new TextWatcher() {
@@ -131,8 +131,10 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                             locations.add(location.getFormatted());
                             Log.d("TAG", "got location: " + location.getFormatted());
                         });
+                        Log.d("TAG", "locations " + locations.toString());
+                        adapter.notifyDataSetChanged();
                     });
-                    adapter.notifyDataSetChanged();
+
                     binding.lvLocations.setVisibility(View.VISIBLE);
                 }
             }

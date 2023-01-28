@@ -41,8 +41,11 @@ public class PostModel {
 
     public LiveData<List<Post>> getUserPosts(String id) {
         if (userPostsList == null) {
+            Log.d("TAL", "getUserPosts " + id);
             userPostsList = localDb.postDao().getPostsByAuthorId(id);
-            refreshAllUserPosts();
+            refreshAllUserPosts(id);
+            Log.d("TAL", "#### from local db " + userPostsList.getValue());
+
         }
         return postsList;
     }
@@ -77,10 +80,10 @@ public class PostModel {
         });
     }
 
-    public void refreshAllUserPosts() {
+    public void refreshAllUserPosts(String id) {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
-        postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
+        postFirebaseModel.getAllUserPostsSince(id, localLastUpdate, list -> {
             executor.execute(() -> {
                 Long time = localLastUpdate;
                 for (Post post : list) {
