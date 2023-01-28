@@ -17,7 +17,11 @@
         android:id="@+id/postFragment"
         android:name="com.example.t_r_ip.PostFragment"
         android:label="Post"
-        tools:layout="@layout/fragment_post" />
+        tools:layout="@layout/fragment_post" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.t_r_ip.SettingsFragment"

@@ -1,6 +1,7 @@
 package com.example.t_r_ip;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,14 +44,18 @@ class PostViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Post post, int pos) {
-        UserModel.instance().getUserDataById(post.getAuthorId(), user -> {
-            displayName.setText(user.getDisplayName());
-            if (!user.getProfilePictureUrl().isEmpty()) {
-                Picasso.get().load(user.getProfilePictureUrl()).placeholder(R.drawable.avatar).into(profilePic);
-            } else {
-                profilePic.setImageResource(R.drawable.avatar);
-            }
-        });
+        String postAuthorId = post.getAuthorId();
+        if (!postAuthorId.isEmpty()) {
+            UserModel.instance().getUserDataById(postAuthorId, user -> {
+                displayName.setText(user.getDisplayName());
+                if (!user.getProfilePictureUrl().isEmpty()) {
+                    Picasso.get().load(user.getProfilePictureUrl()).placeholder(R.drawable.avatar).into(profilePic);
+                } else {
+                    profilePic.setImageResource(R.drawable.avatar);
+                }
+            });
+
+        }
 
         postInfo.setText(post.getPostText());
         if (!post.getPostPictureUrl().isEmpty()) {
@@ -73,6 +78,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     public void setData(List<Post> data) {
         this.data = data;
+        Log.d("TAL", "view model size " + data.size());
         notifyDataSetChanged();
     }
 

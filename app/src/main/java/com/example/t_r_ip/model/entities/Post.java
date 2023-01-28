@@ -17,7 +17,7 @@ public class Post {
 
     public static final String COLLECTION = "posts";
     public static final String LAST_UPDATED = "lastUpdated";
-    private static final String LOCAL_LAST_UPDATED = "students_local_last_update";
+    private static final String LOCAL_LAST_UPDATED = "posts_local_last_update";
     @PrimaryKey
     @NonNull
     @Expose
@@ -42,18 +42,6 @@ public class Post {
         this.postPictureUrl = "";
         this.location = "";
         this.isDeleted = false;
-    }
-
-    public static Long getLocalLastUpdate() {
-        SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-        return sharedPref.getLong(LOCAL_LAST_UPDATED, 0);
-    }
-
-    public static void setLocalLastUpdate(Long time) {
-        SharedPreferences sharedPref = MyApplication.getMyContext().getSharedPreferences("TAG", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putLong(LOCAL_LAST_UPDATED, time);
-        editor.commit();
     }
 
     public static Long getLocalLastUpdate() {

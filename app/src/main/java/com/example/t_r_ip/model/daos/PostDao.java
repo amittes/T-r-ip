@@ -17,10 +17,10 @@ public interface PostDao {
     LiveData<List<Post>> getAll();
 
     @Query("select * from Post where id = :postId")
-    Post getPostById(String postId);
+    LiveData<Post> getPostById(String postId);
 
     @Query("select * from Post where authorId = :authorId")
-    List<Post> getPostsByAuthorId(String authorId);
+    LiveData<List<Post>> getPostsByAuthorId(String authorId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Post... posts);

@@ -69,7 +69,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/attach_clipboard_button_svgrepo_com__1_" />
 
                 <EditText
                     android:id="@+id/locationSearch"

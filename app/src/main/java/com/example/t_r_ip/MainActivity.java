@@ -2,6 +2,7 @@ package com.example.t_r_ip;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.main_bottomNavigationView);
         NavigationUI.setupWithNavController(navView, navController);
+        Log.d("TAL", "current user "+ UserModel.instance().getCurrentUser() );
 
-        if (UserModel.instance().getCurrentUserId() == null) {
+        if (!UserModel.instance().isUserConnected()) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

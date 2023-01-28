@@ -55,6 +55,7 @@ public class PostsListFragment extends Fragment {
 
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         adapter = new PostsRecyclerAdapter(getLayoutInflater(), viewModel.getData().getValue());
         binding.recyclerView.setAdapter(adapter);
 
@@ -63,7 +64,7 @@ public class PostsListFragment extends Fragment {
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
                 Post post = viewModel.getData().getValue().get(pos);
-                NavDirections action = PostsListFragmentDirections.actionPostsListFragmentToPostFragment(); // args
+                PostsListFragmentDirections.ActionPostsListFragmentToPostFragment action = PostsListFragmentDirections.actionPostsListFragmentToPostFragment(post.getId());
                 Navigation.findNavController(view).navigate(action);
             }
         });

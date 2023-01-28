@@ -1,6 +1,9 @@
 package com.example.t_r_ip;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.service.autofill.SaveRequest;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,8 +17,10 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.t_r_ip.databinding.FragmentPostBinding;
+import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
 import com.squareup.picasso.Picasso;
@@ -23,12 +28,13 @@ import com.squareup.picasso.Picasso;
 public class PostFragment extends Fragment {
 
     private FragmentPostBinding binding;
-    private Post post;
+    private PostsListFragmentViewModel viewModel;
+    private String postId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        post = new Post();
+
         FragmentActivity parentActivity = getActivity();
         parentActivity.addMenuProvider(new MenuProvider() {
             @Override
@@ -48,21 +54,52 @@ public class PostFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding =  FragmentPostBinding.inflate(inflater, container, false);
         binding.editPost.setVisibility(View.INVISIBLE);
-        binding.displayName.setText(post.getDisplayName());
-        binding.location.setText(post.getLocation());
-        binding.postInfo.setText(post.getPostText());
-        if (post.getAuthorPictureUrl() != "") {
-            Picasso.get().load(post.getAuthorPictureUrl()).into(binding.profileImage);
-        }
-        if (post.getPostPictureUrl() != "") {
-            Picasso.get().load(post.getPostPictureUrl()).into(binding.postImage);
-        }
+        postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
+        binding.progressBar.setVisibility(View.GONE);
 
-        if (UserModel.instance().getCurrentUser().getDisplayName().equals(post.getDisplayName())) {
-            binding.editPost.setVisibility(View.VISIBLE);
-            binding.editPost.setOnClickListener(view -> { //todo: editpost screen
-                 });
-        }
+        viewModel.getPostById(postId).observe(getViewLifecycleOwner(), post -> {
+            binding.postInfo.setText(post.getPostText());
+
+            UserModel.instance().getUserDataById(post.getAuthorId(), user -> {
+                binding.displayName.setText(user.getDisplayName());
+                if (!user.getProfilePictureUrl().isEmpty()) {
+                    Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                }
+            });
+
+            binding.location.setText(post.getLocation());
+            binding.postInfo.setText(post.getPostText());
+
+            if (!post.getPostPictureUrl().isEmpty()) {
+                Picasso.get().load(post.getPostPictureUrl()).into(binding.postImage);
+            }
+
+            if (UserModel.instance().getCurrentUserId().equals(post.getAuthorId())) {
+                binding.editPost.setVisibility(View.VISIBLE);
+                binding.editPost.setOnClickListener(view -> { //todo: editpost screen
+                     });
+            }
+        });
+
+        PostModel.instance().EventPostsListLoadingState.observe(getViewLifecycleOwner(), status -> {
+            binding.swipeRefresh.setRefreshing(status == PostModel.LoadingState.LOADING);
+        });
+
+        binding.swipeRefresh.setOnRefreshListener(() -> {
+            reloadData();
+        });
         return binding.getRoot();
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(PostsListFragmentViewModel.class);
+    }
+
+    void reloadData() {
+//        binding.progressBar.setVisibility(View.VISIBLE);
+        PostModel.instance().refreshPostById(postId);
+    }
+
 }
