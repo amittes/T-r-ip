@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.t_r_ip.databinding.ActivityRegistrationBinding;
 import com.example.t_r_ip.model.Model;
-import com.example.t_r_ip.model.entities.User;
 import com.example.t_r_ip.model.UserModel;
+import com.example.t_r_ip.model.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,15 +24,13 @@ public class RegistrationActivity extends AppCompatActivity {
     ActivityRegistrationBinding binding;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         binding.btnregister.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 registerNewUser();
             }
         });
@@ -87,8 +85,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
                                             @Override
-                                            public void onComplete(@NonNull Task<AuthResult> task)
-                                            {
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(getApplicationContext(),
                                                                     "Registration successful!",
@@ -98,13 +95,13 @@ public class RegistrationActivity extends AppCompatActivity {
                                                     binding.progressbar.setVisibility(View.GONE);
                                                     User user = new User(UserModel.instance().getCurrentUserId(), email, displayName, "");
 
-                                                    UserModel.instance().saveUser(user, (unused) -> {});
+                                                    UserModel.instance().saveUser(user, (unused) -> {
+                                                    });
                                                     Intent intent
                                                             = new Intent(RegistrationActivity.this,
                                                             MainActivity.class);
                                                     startActivity(intent);
-                                                }
-                                                else {
+                                                } else {
 
                                                     Toast.makeText(
                                                                     getApplicationContext(),

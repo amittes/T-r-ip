@@ -39,13 +39,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
+                <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/profileImage"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/avatar" />
+                    app:srcCompat="@drawable/avatar"
+                    app:civ_border_color="#3f51b5"
+                    app:civ_border_width="4dp"
+                    app:civ_shadow="true"
+                    app:civ_shadow_radius="1dp"
+                    app:civ_shadow_color="#3f51b5"/>
 
                 <TextView
                     android:id="@+id/displayName"

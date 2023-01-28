@@ -31,7 +31,7 @@ public class ImageUploader {
     }
 
     public void upload() {
-        StorageReference storageRef = this.firebaseModel.getStorage().getReference();
+        StorageReference storageRef = FirebaseModel.getStorage().getReference();
         StorageReference imagesRef = storageRef.child(this.folder + "/" + this.imageName + ".jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         this.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

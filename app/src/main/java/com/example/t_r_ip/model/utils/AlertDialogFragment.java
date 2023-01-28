@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class AlertDialogFragment extends DialogFragment {
@@ -23,7 +22,8 @@ public class AlertDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String message = getArguments().getString("message");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(message).setPositiveButton("OK",  (DialogInterface dialogInterface, int i)-> {});
+        builder.setMessage(message).setPositiveButton("OK", (DialogInterface dialogInterface, int i) -> {
+        });
         return builder.create();
     }
 }

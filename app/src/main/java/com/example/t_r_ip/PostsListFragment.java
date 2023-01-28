@@ -26,9 +26,9 @@ import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.entities.Post;
 
 public class PostsListFragment extends Fragment {
-    private FragmentPostsListBinding binding;
     PostsRecyclerAdapter adapter;
     PostsListFragmentViewModel viewModel;
+    private FragmentPostsListBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class PostsListFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;
             }
-        },this, Lifecycle.State.RESUMED);
+        }, this, Lifecycle.State.RESUMED);
     }
 
     @Override
@@ -70,15 +70,15 @@ public class PostsListFragment extends Fragment {
 
         binding.progressBar.setVisibility(View.GONE);
 
-        viewModel.getData().observe(getViewLifecycleOwner(),list->{
+        viewModel.getData().observe(getViewLifecycleOwner(), list -> {
             adapter.setData(list);
         });
 
-        PostModel.instance().EventPostsListLoadingState.observe(getViewLifecycleOwner(), status->{
+        PostModel.instance().EventPostsListLoadingState.observe(getViewLifecycleOwner(), status -> {
             binding.swipeRefresh.setRefreshing(status == PostModel.LoadingState.LOADING);
         });
 
-        binding.swipeRefresh.setOnRefreshListener(()->{
+        binding.swipeRefresh.setOnRefreshListener(() -> {
             reloadData();
         });
 
@@ -94,7 +94,7 @@ public class PostsListFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(PostsListFragmentViewModel.class);
     }
 
-    void reloadData(){
+    void reloadData() {
 //        binding.progressBar.setVisibility(View.VISIBLE);
         PostModel.instance().refreshAllPosts();
     }

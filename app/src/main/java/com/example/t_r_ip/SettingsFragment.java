@@ -4,18 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Lifecycle;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,11 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+
 import com.example.t_r_ip.databinding.FragmentSettingsBinding;
-import com.example.t_r_ip.model.entities.User;
 import com.example.t_r_ip.model.UserModel;
+import com.example.t_r_ip.model.entities.User;
 import com.example.t_r_ip.model.utils.AlertDialogFragment;
-import com.example.t_r_ip.model.utils.ImageUploader;
 import com.example.t_r_ip.model.utils.OptionsDialogFragment;
 import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
@@ -50,11 +47,12 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menu.removeItem(R.id.main_menu_addPost);
             }
+
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 return false;
             }
-        },this, Lifecycle.State.RESUMED);
+        }, this, Lifecycle.State.RESUMED);
 
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
             @Override
@@ -68,7 +66,7 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
         galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
-                if (result != null){
+                if (result != null) {
                     binding.profileImage.setImageURI(result);
                     isAvatarSelected = true;
                 }
@@ -76,16 +74,16 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
         });
     }
 
-    public void setUploadPictureLauncher () {
+    public void setUploadPictureLauncher() {
         cameraLauncher.launch(null);
     }
 
-    public void setGalleryLauncher () {
+    public void setGalleryLauncher() {
         galleryLauncher.launch("image/*");
     }
 
-    public void doOptionSelected (int index) {
-        if (index==0) {
+    public void doOptionSelected(int index) {
+        if (index == 0) {
             setGalleryLauncher();
         } else {
             setUploadPictureLauncher();
@@ -97,7 +95,7 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                              Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
-        UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user)-> {
+        UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user) -> {
             if (user != null) {
                 binding.email.setText(user.getEmail());
                 binding.displayName.setHint(user.getDisplayName());
@@ -106,11 +104,11 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                 }
             }
         });
-
+//
         binding.profileImage.setOnClickListener(view -> {
             String title = "What would you like to do?";
             String[] options = {"Take picture from gallery", "Upload picture"};
-            DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options );
+            DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options);
             dialogFragment.show(getChildFragmentManager(), "SET_PROFILE_IMAGE_DIALOG");
         });
 
@@ -121,7 +119,9 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                 String email = userModel.getCurrentUser().getEmail();
                 String displayName = binding.displayName.getText().toString();
 
-                if (displayName == "") { displayName = userModel.getCurrentUser().getDisplayName(); }
+                if (displayName == "") {
+                    displayName = userModel.getCurrentUser().getDisplayName();
+                }
 
                 User user = new User(userModel.getCurrentUserId(), email, displayName, "");
 
@@ -138,12 +138,14 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                             user.setProfilePictureUrl(url);
                         }
 
-                        userModel.saveUser(user, (unused) -> {});
+                        userModel.saveUser(user, (unused) -> {
+                        });
                     });
                 } else {
                     userModel.getUserDataById(userModel.getCurrentUserId(), (userCurrentData) -> {
                         user.setProfilePictureUrl(userCurrentData.getProfilePictureUrl());
-                        userModel.saveUser(user, (unused) -> {});
+                        userModel.saveUser(user, (unused) -> {
+                        });
                     });
                 }
 

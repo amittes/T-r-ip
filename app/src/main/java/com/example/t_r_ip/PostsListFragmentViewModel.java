@@ -9,9 +9,9 @@ import com.example.t_r_ip.model.entities.Post;
 import java.util.List;
 
 public class PostsListFragmentViewModel extends ViewModel {
-    private LiveData<List<Post>> data = PostModel.instance().getAllPosts();
+    private final LiveData<List<Post>> data = PostModel.instance().getAllPosts();
 
-    LiveData<List<Post>> getData(){
+    LiveData<List<Post>> getData() {
         return data;
     }
 }
