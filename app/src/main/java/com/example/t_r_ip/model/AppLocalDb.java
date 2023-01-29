@@ -8,7 +8,7 @@ import com.example.t_r_ip.MyApplication;
 import com.example.t_r_ip.model.daos.PostDao;
 import com.example.t_r_ip.model.entities.Post;
 
-@Database(entities = {Post.class}, version = 7)
+@Database(entities = {Post.class}, version = 10)
 abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract PostDao postDao();
 }

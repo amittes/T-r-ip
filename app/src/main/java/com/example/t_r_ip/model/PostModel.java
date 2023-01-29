@@ -41,25 +41,20 @@ public class PostModel {
 
     public LiveData<List<Post>> getUserPosts(String id) {
         if (userPostsList == null) {
-            Log.d("TAL", "getUserPosts " + id);
             userPostsList = localDb.postDao().getPostsByAuthorId(id);
             refreshAllUserPosts(id);
-            Log.d("TAL", "#### from local db " + userPostsList.getValue());
-
         }
         return postsList;
     }
 
     public LiveData<Post> getPostById(String id) {
         LiveData<Post> post = localDb.postDao().getPostById(id);
-        refreshPostById(id);
         return post;
     }
 
     public void refreshAllPosts() {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
-        Log.d("TAL", "localLastUpdate " + localLastUpdate);
         postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
             executor.execute(() -> {
                 Long time = localLastUpdate;
@@ -67,9 +62,7 @@ public class PostModel {
                     if (time < post.getLastUpdated()) {
                         time = post.getLastUpdated();
                     }
-                    if (!post.isDeleted()) {
-                        localDb.postDao().insertAll(post);
-                    }
+                    localDb.postDao().insertAll(post);
                 }
                 try {
                     Thread.sleep(3000);
@@ -102,31 +95,6 @@ public class PostModel {
                 Post.setLocalLastUpdate(time);
                 EventPostsListLoadingState.postValue(LoadingState.NOT_LOADING);
             });
-        });
-    }
-
-   public void refreshPostById(String id) {
-        EventPostsListLoadingState.setValue(LoadingState.LOADING);
-        Long localLastUpdate = Post.getLocalLastUpdate();
-        Log.d("TAL", "localLastUpdate " + localLastUpdate );
-        postFirebaseModel.getPostByIdSince(id, localLastUpdate, post -> {
-            if (post != null) {
-                executor.execute(() -> {
-                    Long time = localLastUpdate;
-                    localDb.postDao().insertAll(post);
-                    if (time < post.getLastUpdated()) {
-                        time = post.getLastUpdated();
-                    }
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Post.setLocalLastUpdate(time);
-                    EventPostsListLoadingState.postValue(LoadingState.NOT_LOADING);
-                });
-            }
-
         });
     }
 

@@ -99,7 +99,6 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
         if (getArguments().getString("postId") != null) {
             this.currentPostId = getArguments().getString("postId");
-            Log.d("TAL", "ADD POST, POST ID: " + currentPostId);
         }
 
         if (!currentPostId.isEmpty()) {
@@ -153,9 +152,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                     data.observe(getViewLifecycleOwner(), list -> {
                         list.forEach(location -> {
                             locations.add(location.getFormatted());
-                            Log.d("TAG", "got location: " + location.getFormatted());
                         });
-                        Log.d("TAG", "locations " + locations.toString());
                         adapter.notifyDataSetChanged();
                     });
 
@@ -216,7 +213,6 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         Post post = new Post();
         if (!postId.isEmpty()) {
             post.setId(postId);
-
         }
         post.setPostText(binding.postInfo.getText().toString());
         post.setPostPictureUrl("");

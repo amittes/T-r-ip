@@ -57,7 +57,6 @@ public class PostsListFragment extends Fragment {
         if (id == null) {
             return viewModel.getData();
         } else {
-            Log.d("TAL", "user posts " +viewModel.getUserPosts(id).getValue().size());
             return viewModel.getUserPosts(id);
         }
     }
@@ -70,21 +69,19 @@ public class PostsListFragment extends Fragment {
 
         if (getArguments() != null) {
             this.userId = getArguments().getString("userId");
-            Log.d("TAL", "POST LIST, USER ID: " + userId);
         }
 
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new PostsRecyclerAdapter(getLayoutInflater(), getPostsData(userId).getValue());
-        Log.d("TAL", "data count " + adapter.getItemCount());
         binding.recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new PostsRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-                Post post = getPostsData(userId).getValue().stream().filter(post1 -> !post1.getAuthorId().isEmpty()).collect(Collectors.toList()).get(pos);
+                Post post = getPostsData(userId).getValue().stream().filter(post1 -> !post1.isDeleted()).collect(Collectors.toList()).get(pos);
                 Bundle bundle = new Bundle();
                 bundle.putString("postId", post.getId());
                 Navigation.findNavController(view).navigate(R.id.action_global_postFragment, bundle);

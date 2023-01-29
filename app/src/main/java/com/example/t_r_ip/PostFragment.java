@@ -33,7 +33,7 @@ public class PostFragment extends Fragment implements OptionsDialogFragmentInter
 
     private FragmentPostBinding binding;
     private PostsListFragmentViewModel viewModel;
-    private String postId;
+    private Post currentPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +58,11 @@ public class PostFragment extends Fragment implements OptionsDialogFragmentInter
                              @Nullable Bundle savedInstanceState) {
         binding =  FragmentPostBinding.inflate(inflater, container, false);
         binding.editPost.setVisibility(View.INVISIBLE);
-        postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
+        String postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
         binding.progressBar.setVisibility(View.GONE);
 
         viewModel.getPostById(postId).observe(getViewLifecycleOwner(), post -> {
+            this.currentPost = post;
             binding.postInfo.setText(post.getPostText());
 
             UserModel.instance().getUserDataById(post.getAuthorId(), user -> {
@@ -112,21 +113,18 @@ public class PostFragment extends Fragment implements OptionsDialogFragmentInter
 
     void reloadData() {
 //        binding.progressBar.setVisibility(View.VISIBLE);
-        PostModel.instance().refreshPostById(postId);
+        PostModel.instance().refreshAllPosts();
     }
 
     @Override
     public void doOptionSelected(int index) {
         getActivity().onBackPressed();
         if (index == 0) {
-            Log.d("TAG", "Edit option");
             Bundle bundle = new Bundle();
-            bundle.putString("postId", postId);
+            bundle.putString("postId", this.currentPost.getId());
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_global_addPostFragment, bundle);
         } else if (index == 1) {
-            viewModel.getPostById(postId).observe(getViewLifecycleOwner(), post -> {
-                PostModel.instance().removePost(post, unused -> {});
-            });
+            PostModel.instance().removePost(this.currentPost, unused -> {});
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.t_r_ip;
 
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +57,6 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         });
 
         postInfo.setText(post.getPostText());
-        Log.d("TAL", "post location " + post.getLocation());
         if(post.getLocation().isEmpty()) {
             postLocation.setVisibility(View.INVISIBLE);
         } else {
@@ -83,8 +81,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void setData(List<Post> data) {
-        this.data = data.stream().filter(post -> !post.getAuthorId().isEmpty()).collect(Collectors.toList()); // firebase is a shit
-        Log.d("TAL", "view model size " + this.data.size());
+        this.data = data.stream().filter(post1 -> !post1.isDeleted()).collect(Collectors.toList());
         notifyDataSetChanged();
     }
 
