@@ -44,7 +44,7 @@ public class PostModel {
             userPostsList = localDb.postDao().getPostsByAuthorId(id);
             refreshAllUserPosts(id);
         }
-        return postsList;
+        return userPostsList;
     }
 
     public LiveData<Post> getPostById(String id) {
@@ -59,10 +59,10 @@ public class PostModel {
             executor.execute(() -> {
                 Long time = localLastUpdate;
                 for (Post post : list) {
+                    localDb.postDao().insertAll(post);
                     if (time < post.getLastUpdated()) {
                         time = post.getLastUpdated();
                     }
-                    localDb.postDao().insertAll(post);
                 }
                 try {
                     Thread.sleep(3000);
