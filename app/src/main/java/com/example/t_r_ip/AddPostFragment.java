@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -204,16 +205,11 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     }
 
     private void sharePost(String postId) {
-//        Model.Listener<Void> listener = new Model.Listener<Void>() {
-//            @Override
-//            public void onComplete(Void aVoid) {
-//
-//            }
-//        };
-        if (binding.postInfo.getText() == null) {
-            String message = "Please add description to your post";
-            DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
-            dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
+        if (binding.postInfo.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(),
+                            "Please add description to your post",
+                            Toast.LENGTH_LONG)
+                    .show();
         } else {
             Post post = new Post();
             if (!postId.isEmpty()) {
@@ -238,7 +234,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
 
             String message = "Your post has been uploaded successfully";
             DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
-            dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
+            dialogFragment.show(getChildFragmentManager(), "ADD_POST_SUCCESSFULLY");
         }
     }
 }
