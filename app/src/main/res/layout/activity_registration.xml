@@ -41,12 +41,6 @@
         android:layout_height="wrap_content"
         android:text="Register" />
 
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/alreadyRegister_tv"
         android:layout_width="match_parent"
@@ -59,8 +53,16 @@
         android:id="@+id/signInButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
+        android:layout_marginStart="140dp"
         android:gravity="center"
         android:text="Sign In" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginStart="160dp"
+        android:visibility="visible" />
 
 </LinearLayout>
