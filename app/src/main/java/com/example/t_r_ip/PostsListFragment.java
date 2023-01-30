@@ -27,6 +27,7 @@ import com.example.t_r_ip.databinding.FragmentPostsListBinding;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.entities.Post;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +62,12 @@ public class PostsListFragment extends Fragment {
         }
     }
 
+    public List<Post> showData (List<Post> data) {
+        List<Post> displayData = data.stream().filter(post -> !post.isDeleted()).collect(Collectors.toList());
+        Collections.sort(displayData, (pre, curr) -> (int) (curr.getLastUpdated() - pre.getLastUpdated()));
+        return displayData;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -81,7 +88,7 @@ public class PostsListFragment extends Fragment {
             @Override
             public void onItemClick(int pos) {
                 Log.d("TAG", "Row was clicked " + pos);
-                Post post = getPostsData(userId).getValue().stream().filter(post1 -> !post1.isDeleted()).collect(Collectors.toList()).get(pos);
+                Post post = showData(getPostsData(userId).getValue()).get(pos);
                 Bundle bundle = new Bundle();
                 bundle.putString("postId", post.getId());
                 Navigation.findNavController(view).navigate(R.id.action_global_postFragment, bundle);
@@ -91,7 +98,7 @@ public class PostsListFragment extends Fragment {
 
 
         getPostsData(userId).observe(getViewLifecycleOwner(), list -> {
-            adapter.setData(list);
+            adapter.setData(showData(list));
         });
 
         PostModel.instance().EventPostsListLoadingState.observe(getViewLifecycleOwner(), status -> {

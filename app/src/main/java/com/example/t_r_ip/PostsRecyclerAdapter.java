@@ -45,7 +45,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(Post post, int pos) {
+    public void bind(Post post) {
         String postAuthorId = post.getAuthorId();
         UserModel.instance().getUserDataById(postAuthorId, user -> {
             displayName.setText(user.getDisplayName());
@@ -58,7 +58,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
 
         postInfo.setText(post.getPostText());
         if(post.getLocation().isEmpty()) {
-            postLocation.setVisibility(View.INVISIBLE);
+            postLocation.setVisibility(View.GONE);
         } else {
             postLocation.setText(post.getLocation());
         }
@@ -81,7 +81,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void setData(List<Post> data) {
-        this.data = data.stream().filter(post1 -> !post1.isDeleted()).collect(Collectors.toList());
+        this.data = data;
         notifyDataSetChanged();
     }
 
@@ -99,7 +99,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = data.get(position);
-        holder.bind(post, position);
+        holder.bind(post);
     }
 
     @Override
