@@ -52,8 +52,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Already register? SIGN IN"
-        android:textColor="@color/fui_linkColor"
-        android:clickable="true"
+        android:text="Already register?"
+        android:textColorLink="@color/black"
         android:textSize="18sp"/>
+    <Button
+        android:id="@+id/signInButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="150dp"
+        android:gravity="center"
+        android:text="Sign In" />
+
 </LinearLayout>
