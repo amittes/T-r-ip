@@ -119,10 +119,6 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                 String email = userModel.getCurrentUserEmail();
                 String displayName = binding.displayName.getText().toString();
 
-                if (displayName.isEmpty()) {
-                    displayName = binding.displayName.getHint().toString();
-                }
-
                 User user = new User(userModel.getCurrentUserId(), email, displayName, "");
 
                 String password = binding.password.getText().toString();
@@ -137,13 +133,23 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                         if (url != null) {
                             user.setProfilePictureUrl(url);
                         }
-
-                        userModel.saveUser(user, (unused) -> {
-                        });
+                        if (user.getDisplayName().isEmpty()) {
+                            userModel.getUserDataById(userModel.getCurrentUserId(), (userCurrentData) -> {
+                                user.setDisplayName(userCurrentData.getDisplayName());
+                                userModel.saveUser(user, (unused) -> {
+                                });
+                            });
+                        } else {
+                            userModel.saveUser(user, (unused) -> {
+                            });
+                        }
                     });
                 } else {
                     userModel.getUserDataById(userModel.getCurrentUserId(), (userCurrentData) -> {
                         user.setProfilePictureUrl(userCurrentData.getProfilePictureUrl());
+                        if (user.getDisplayName().isEmpty()) {
+                            user.setDisplayName(userCurrentData.getDisplayName());
+                        }
                         userModel.saveUser(user, (unused) -> {
                         });
                     });
