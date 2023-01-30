@@ -81,7 +81,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void setData(List<Post> data) {
-        this.data = data.stream().filter(post1 -> !post1.isDeleted()).collect(Collectors.toList());
+        this.data = data;
         notifyDataSetChanged();
     }
 
