@@ -35,6 +35,15 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
         setContentView(binding.getRoot());
+
+        binding.signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void registerNewUser() {
@@ -51,6 +60,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter email!!",
                             Toast.LENGTH_LONG)
                     .show();
+            binding.progressbar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(displayName)) {
@@ -58,6 +68,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter display name!!",
                             Toast.LENGTH_LONG)
                     .show();
+            binding.progressbar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
@@ -65,6 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter password!!",
                             Toast.LENGTH_LONG)
                     .show();
+            binding.progressbar.setVisibility(View.GONE);
             return;
         }
 

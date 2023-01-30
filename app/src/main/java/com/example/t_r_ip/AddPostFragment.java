@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -204,35 +205,36 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     }
 
     private void sharePost(String postId) {
-        Model.Listener<Void> listener = new Model.Listener<Void>() {
-            @Override
-            public void onComplete(Void aVoid) {
-
+        if (binding.postInfo.getText().toString().isEmpty()) {
+            Toast.makeText(getContext(),
+                            "Please add description to your post",
+                            Toast.LENGTH_LONG)
+                    .show();
+        } else {
+            Post post = new Post();
+            if (!postId.isEmpty()) {
+                post.setId(postId);
             }
-        };
-        Post post = new Post();
-        if (!postId.isEmpty()) {
-            post.setId(postId);
-        }
-        post.setPostText(binding.postInfo.getText().toString());
-        post.setPostPictureUrl("");
-        post.setAuthorId(UserModel.instance().getCurrentUserId());
-        post.setLocation(binding.locationSearch.getText().toString());
-        if (isAvatarSelected) {
-            binding.postImage.setDrawingCacheEnabled(true);
-            binding.postImage.buildDrawingCache();
-            Bitmap bitmap = ((BitmapDrawable) binding.postImage.getDrawable()).getBitmap();
-            PostModel.instance().uploadImage(post.getId(), bitmap, url -> {
-                if (url != null) {
-                    post.setPostPictureUrl(url);
-                }
-                PostModel.instance().addPost(post, (unused) -> {});
-            });
-        }
-        PostModel.instance().addPost(post, (unused) -> {});
+            post.setPostText(binding.postInfo.getText().toString());
+            post.setPostPictureUrl("");
+            post.setAuthorId(UserModel.instance().getCurrentUserId());
+            post.setLocation(binding.locationSearch.getText().toString());
+            if (isAvatarSelected) {
+                binding.postImage.setDrawingCacheEnabled(true);
+                binding.postImage.buildDrawingCache();
+                Bitmap bitmap = ((BitmapDrawable) binding.postImage.getDrawable()).getBitmap();
+                PostModel.instance().uploadImage(post.getId(), bitmap, url -> {
+                    if (url != null) {
+                        post.setPostPictureUrl(url);
+                    }
+                    PostModel.instance().addPost(post, (unused) -> {});
+                });
+            }
+            PostModel.instance().addPost(post, (unused) -> {});
 
-        String message = "Your post has been uploaded successfully";
-        DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
-        dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
+            String message = "Your post has been uploaded successfully";
+            DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
+            dialogFragment.show(getChildFragmentManager(), "ADD_POST_SUCCESSFULLY");
+        }
     }
 }
