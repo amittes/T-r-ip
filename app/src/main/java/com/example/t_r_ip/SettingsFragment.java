@@ -104,7 +104,7 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                 }
             }
         });
-//
+
         binding.profileImage.setOnClickListener(view -> {
             String title = "What would you like to do?";
             String[] options = {"Take picture from gallery", "Upload picture"};
@@ -149,7 +149,7 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
                     });
                 }
 
-                String message = "Your post has been uploaded successfully";
+                String message = "Your profile has been updated successfully";
                 DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);
                 dialogFragment.show(getChildFragmentManager(), "UPDATE_PROFILE_DETAILS");
             }

@@ -14,22 +14,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.t_r_ip.databinding.FragmentPostBinding;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.entities.Post;
+import com.example.t_r_ip.model.utils.OptionsDialogFragment;
+import com.example.t_r_ip.model.utils.OptionsDialogFragmentInterface;
 import com.squareup.picasso.Picasso;
 
-public class PostFragment extends Fragment {
+public class PostFragment extends Fragment implements OptionsDialogFragmentInterface {
 
     private FragmentPostBinding binding;
     private PostsListFragmentViewModel viewModel;
-    private String postId;
+    private Post currentPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,13 +58,11 @@ public class PostFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding =  FragmentPostBinding.inflate(inflater, container, false);
         binding.editPost.setVisibility(View.INVISIBLE);
-        postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
+        String postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
         binding.progressBar.setVisibility(View.GONE);
 
-        Log.d("TAL", "post id from action" + postId);
-
         viewModel.getPostById(postId).observe(getViewLifecycleOwner(), post -> {
-            Log.d("TAL", "post is ???" + post.getPostText());
+            this.currentPost = post;
             binding.postInfo.setText(post.getPostText());
 
             UserModel.instance().getUserDataById(post.getAuthorId(), user -> {
@@ -70,7 +72,11 @@ public class PostFragment extends Fragment {
                 }
             });
 
-            binding.location.setText(post.getLocation());
+            if (!post.getLocation().isEmpty()) {
+                binding.location.setText(post.getLocation());
+            } else {
+                binding.location.setVisibility(View.INVISIBLE);
+            }
             binding.postInfo.setText(post.getPostText());
 
             if (!post.getPostPictureUrl().isEmpty()) {
@@ -79,8 +85,12 @@ public class PostFragment extends Fragment {
 
             if (UserModel.instance().getCurrentUserId().equals(post.getAuthorId())) {
                 binding.editPost.setVisibility(View.VISIBLE);
-                binding.editPost.setOnClickListener(view -> { //todo: editpost screen
-                     });
+                binding.editPost.setOnClickListener(view -> {
+                    String title = "What would you like to do?";
+                    String[] options = {"Edit post", "Delete post"};
+                    DialogFragment dialogFragment = OptionsDialogFragment.newInstance(title, options);
+                    dialogFragment.show(getChildFragmentManager(), "EDIT_POST_DIALOG");
+                });
             }
         });
 
@@ -91,6 +101,7 @@ public class PostFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(() -> {
             reloadData();
         });
+
         return binding.getRoot();
     }
 
@@ -102,7 +113,19 @@ public class PostFragment extends Fragment {
 
     void reloadData() {
 //        binding.progressBar.setVisibility(View.VISIBLE);
-        PostModel.instance().refreshPostById(postId);
+        PostModel.instance().refreshAllPosts();
+    }
+
+    @Override
+    public void doOptionSelected(int index) {
+        getActivity().onBackPressed();
+        if (index == 0) {
+            Bundle bundle = new Bundle();
+            bundle.putString("postId", this.currentPost.getId());
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_global_addPostFragment, bundle);
+        } else if (index == 1) {
+            PostModel.instance().removePost(this.currentPost, unused -> {});
+        }
     }
 
 }

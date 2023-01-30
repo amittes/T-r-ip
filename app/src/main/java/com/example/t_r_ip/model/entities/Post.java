@@ -22,16 +22,22 @@ public class Post {
     @NonNull
     @Expose
     private String id;
+    @NonNull
     @Expose
     private String authorId;
+    @NonNull
     @Expose
     private String postText;
+    @NonNull
     @Expose
     private String postPictureUrl;
+    @NonNull
     @Expose
     private String location;
+    @NonNull
     @Expose
     private boolean isDeleted;
+    @NonNull
     @Expose(deserialize = false)
     private long lastUpdated;
 

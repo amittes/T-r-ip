@@ -33,7 +33,7 @@ public class PostModel {
 
     public LiveData<List<Post>> getAllPosts() {
         if (postsList == null) {
-            postsList = localDb.postDao().getAll();
+            postsList = localDb.postDao().getAll(false);
             refreshAllPosts();
         }
         return postsList;
@@ -42,21 +42,19 @@ public class PostModel {
     public LiveData<List<Post>> getUserPosts(String id) {
         if (userPostsList == null) {
             userPostsList = localDb.postDao().getPostsByAuthorId(id);
-            refreshAllUserPosts();
+            refreshAllUserPosts(id);
         }
         return postsList;
     }
 
     public LiveData<Post> getPostById(String id) {
         LiveData<Post> post = localDb.postDao().getPostById(id);
-        refreshPostById(id);
         return post;
     }
 
     public void refreshAllPosts() {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
-        Log.d("TAL", "localLastUpdate " + localLastUpdate);
         postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
             executor.execute(() -> {
                 Long time = localLastUpdate;
@@ -77,10 +75,10 @@ public class PostModel {
         });
     }
 
-    public void refreshAllUserPosts() {
+    public void refreshAllUserPosts(String id) {
         EventPostsListLoadingState.setValue(LoadingState.LOADING);
         Long localLastUpdate = Post.getLocalLastUpdate();
-        postFirebaseModel.getAllPostsSince(localLastUpdate, list -> {
+        postFirebaseModel.getAllUserPostsSince(id, localLastUpdate, list -> {
             executor.execute(() -> {
                 Long time = localLastUpdate;
                 for (Post post : list) {
@@ -100,33 +98,16 @@ public class PostModel {
         });
     }
 
-   public void refreshPostById(String id) {
-        EventPostsListLoadingState.setValue(LoadingState.LOADING);
-        Long localLastUpdate = Post.getLocalLastUpdate();
-        Log.d("TAL", "localLastUpdate " + localLastUpdate );
-        postFirebaseModel.getPostByIdSince(id, localLastUpdate, post -> {
-            if (post != null) {
-                executor.execute(() -> {
-                    Long time = localLastUpdate;
-                    localDb.postDao().insertAll(post);
-                    if (time < post.getLastUpdated()) {
-                        time = post.getLastUpdated();
-                    }
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Post.setLocalLastUpdate(time);
-                    EventPostsListLoadingState.postValue(LoadingState.NOT_LOADING);
-                });
-            }
-
+    public void addPost(Post post, Listener<Void> listener) {
+        postFirebaseModel.addPost(post, (Void) -> {
+            refreshAllPosts();
+            listener.onComplete(null);
         });
     }
 
-    public void addPost(Post st, Listener<Void> listener) {
-        postFirebaseModel.addPost(st, (Void) -> {
+    public void removePost(Post post, Listener<Void> listener) {
+        post.setDeleted(true);
+        postFirebaseModel.addPost(post, (Void) -> {
             refreshAllPosts();
             listener.onComplete(null);
         });

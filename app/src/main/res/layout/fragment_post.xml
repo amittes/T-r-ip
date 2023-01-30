@@ -101,9 +101,12 @@
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        android:textStyle="bold"
+                        android:drawableLeft="@drawable/location_poi_svgrepo_com__1_"
+                        android:drawablePadding="2dp"
                         app:layout_constraintTop_toBottomOf="@id/displayName" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -111,10 +114,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout2"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +126,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="start"
-                        android:layout_marginTop="10dp"
                         android:background="@null"
                         android:gravity="start"
                         android:textSize="18sp"
@@ -137,15 +137,20 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout3"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
                     <ImageView
                         android:id="@+id/postImage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

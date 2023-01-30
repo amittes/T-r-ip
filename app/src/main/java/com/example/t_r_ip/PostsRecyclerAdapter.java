@@ -1,6 +1,5 @@
 package com.example.t_r_ip;
 
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
     TextView postInfo;
     ImageView profilePic;
     ImageView postPic;
+    TextView postLocation;
 
     List<Post> data;
 
@@ -34,6 +34,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         postInfo = itemView.findViewById(R.id.postlistrow_post_info);
         profilePic = itemView.findViewById(R.id.postlistrow_profile_pic);
         postPic = itemView.findViewById(R.id.postlistrow_post_image);
+        postLocation = itemView.findViewById(R.id.postlistrow_post_location);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +57,11 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         });
 
         postInfo.setText(post.getPostText());
+        if(post.getLocation().isEmpty()) {
+            postLocation.setVisibility(View.INVISIBLE);
+        } else {
+            postLocation.setText(post.getLocation());
+        }
         if (!post.getPostPictureUrl().isEmpty()) {
             postPic.setVisibility(View.VISIBLE);
             Picasso.get().load(post.getPostPictureUrl()).placeholder(postPic.getDrawable()).into(postPic);
@@ -75,8 +81,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     }
 
     public void setData(List<Post> data) {
-        this.data = data.stream().filter(post -> !post.getAuthorId().isEmpty()).collect(Collectors.toList()); // firebase is a shit
-        Log.d("TAL", "view model size " + this.data.size());
+        this.data = data.stream().filter(post1 -> !post1.isDeleted()).collect(Collectors.toList());
         notifyDataSetChanged();
     }
 

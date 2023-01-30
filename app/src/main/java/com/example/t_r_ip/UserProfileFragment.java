@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 
 import com.example.t_r_ip.databinding.FragmentUserProfileBinding;
@@ -51,6 +52,13 @@ public class UserProfileFragment extends Fragment {
                 }
             }
         });
+        Fragment PostsList = new PostsListFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.postlist_fragment_container, PostsList).commit();
+        Bundle args = new Bundle();
+        args.putString("userId", UserModel.instance().getCurrentUserId());
+        PostsList.setArguments(args);
+
         return binding.getRoot();
     }
 }

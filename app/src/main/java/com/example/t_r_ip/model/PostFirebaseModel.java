@@ -55,12 +55,10 @@ public class PostFirebaseModel extends FirebaseModel {
                                 Post post = gson.fromJson(json, Post.class);
                                 Timestamp time = (Timestamp) snapshot.get(LAST_UPDATED);
                                 post.setLastUpdated(time.getSeconds());
-                                if(!post.isDeleted()) {
-                                    list.add(post);
-                                }
+                                list.add(post);
                             }
                         }
-                        Log.d("TAL", "receive " + list.size() + " documents from firebase");
+                        Log.d("TAG", "receive " + list.size() + " documents from firebase");
                         callback.onComplete(list);
                     }
                 });
@@ -94,6 +92,9 @@ public class PostFirebaseModel extends FirebaseModel {
     }
 
     public void getPostByIdSince(String id, Long since, PostModel.Listener<Post> callback) {
+        Log.d("TAG", "getPostByIdSince " + id);
+        Timestamp t = new Timestamp(since, 0);
+        Log.d("TAG", "getAllUserPostsSince LAST_UPDATED " + t.toString());
         firebaseModel.getDb().collection(Post.COLLECTION)
                 .whereEqualTo("id", id)
                 .whereGreaterThanOrEqualTo(LAST_UPDATED, new Timestamp(since, 0))
@@ -108,10 +109,13 @@ public class PostFirebaseModel extends FirebaseModel {
                             post = gson.fromJson(json, Post.class);
                             Timestamp time = (Timestamp) snapshot.getDocuments().get(0).get(LAST_UPDATED);
                             post.setLastUpdated(time.getSeconds());
+                            Log.d("TAG", "Successful task, post id:" + post.getId());
                         }
                         callback.onComplete(post);
                     }
                 });
+
+
     }
 
     public void addPost(Post post, PostModel.Listener<Void> listener) {
@@ -119,6 +123,7 @@ public class PostFirebaseModel extends FirebaseModel {
         Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>() {
         }.getType());
         mapPost.put(LAST_UPDATED, FieldValue.serverTimestamp());
+        Log.d("TAG", "gson post " + mapPost.toString());
         firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

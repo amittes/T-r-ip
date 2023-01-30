@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.t_r_ip.model.entities.Post;
 
@@ -13,8 +14,8 @@ import java.util.List;
 
 @Dao
 public interface PostDao {
-    @Query("select * from Post")
-    LiveData<List<Post>> getAll();
+    @Query("select * from Post where isDeleted = :isDeleted")
+    LiveData<List<Post>> getAll(Boolean isDeleted);
 
     @Query("select * from Post where id = :postId")
     LiveData<Post> getPostById(String postId);

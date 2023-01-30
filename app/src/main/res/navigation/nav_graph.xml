@@ -8,11 +8,7 @@
         android:id="@+id/postsListFragment"
         android:name="com.example.t_r_ip.PostsListFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_posts_list">
-        <action
-            android:id="@+id/action_postsListFragment_to_postFragment"
-            app:destination="@id/postFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_posts_list"/>
     <fragment
         android:id="@+id/postFragment"
         android:name="com.example.t_r_ip.PostFragment"
@@ -36,5 +32,10 @@
         android:id="@+id/addPostFragment"
         android:name="com.example.t_r_ip.AddPostFragment"
         android:label="Add Post"
-        tools:layout="@layout/fragment_add_post" /><action android:id="@+id/action_global_addPostFragment" app:destination="@id/addPostFragment"/>
+        tools:layout="@layout/fragment_add_post" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment><action android:id="@+id/action_global_addPostFragment" app:destination="@id/addPostFragment"/>
+    <action android:id="@+id/action_global_postFragment" app:destination="@id/postFragment" />
 </navigation>
