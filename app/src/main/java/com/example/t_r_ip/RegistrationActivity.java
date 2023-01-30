@@ -60,6 +60,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter email!!",
                             Toast.LENGTH_LONG)
                     .show();
+            binding.progressbar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(displayName)) {
@@ -67,6 +68,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter display name!!",
                             Toast.LENGTH_LONG)
                     .show();
+            binding.progressbar.setVisibility(View.GONE);
             return;
         }
         if (TextUtils.isEmpty(password)) {
@@ -74,6 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             "Please enter password!!",
                             Toast.LENGTH_LONG)
                     .show();
+            binding.progressbar.setVisibility(View.GONE);
             return;
         }
 
