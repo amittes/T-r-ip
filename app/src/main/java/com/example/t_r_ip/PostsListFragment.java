@@ -18,8 +18,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
-import androidx.navigation.NavHost;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -62,7 +60,7 @@ public class PostsListFragment extends Fragment {
         }
     }
 
-    public List<Post> showData (List<Post> data) {
+    public List<Post> showData(List<Post> data) {
         List<Post> displayData = data.stream().filter(post -> !post.isDeleted()).collect(Collectors.toList());
         Collections.sort(displayData, (pre, curr) -> (int) (curr.getLastUpdated() - pre.getLastUpdated()));
         return displayData;
@@ -87,7 +85,6 @@ public class PostsListFragment extends Fragment {
         adapter.setOnItemClickListener(new PostsRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos) {
-                Log.d("TAG", "Row was clicked " + pos);
                 Post post = showData(getPostsData(userId).getValue()).get(pos);
                 Bundle bundle = new Bundle();
                 bundle.putString("postId", post.getId());

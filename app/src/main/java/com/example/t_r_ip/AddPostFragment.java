@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +30,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.t_r_ip.databinding.FragmentAddPostBinding;
-import com.example.t_r_ip.model.Model;
 import com.example.t_r_ip.model.PostModel;
 import com.example.t_r_ip.model.UserModel;
 import com.example.t_r_ip.model.api.Location;
@@ -47,15 +45,14 @@ import java.util.List;
 
 public class AddPostFragment extends Fragment implements OptionsDialogFragmentInterface {
 
-    private FragmentAddPostBinding binding;
-    private ArrayAdapter<String> adapter;
-    private List<String> locations = new ArrayList<>();
-    private PostsListFragmentViewModel viewModel;
-
     ActivityResultLauncher<Void> cameraLauncher;
     ActivityResultLauncher<String> galleryLauncher;
     Boolean isAvatarSelected = false;
     String currentPostId = "";
+    private FragmentAddPostBinding binding;
+    private ArrayAdapter<String> adapter;
+    private List<String> locations = new ArrayList<>();
+    private PostsListFragmentViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -227,10 +224,12 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                     if (url != null) {
                         post.setPostPictureUrl(url);
                     }
-                    PostModel.instance().addPost(post, (unused) -> {});
+                    PostModel.instance().addPost(post, (unused) -> {
+                    });
                 });
             }
-            PostModel.instance().addPost(post, (unused) -> {});
+            PostModel.instance().addPost(post, (unused) -> {
+            });
 
             String message = "Your post has been uploaded successfully";
             DialogFragment dialogFragment = AlertDialogFragment.newInstance(message);

@@ -92,7 +92,6 @@ public class PostFirebaseModel extends FirebaseModel {
         Map<String, Object> mapPost = gson.fromJson(jsonPost, new TypeToken<Map<String, Object>>() {
         }.getType());
         mapPost.put(LAST_UPDATED, FieldValue.serverTimestamp());
-        Log.d("TAG", "gson post " + mapPost.toString());
         firebaseModel.getDb().collection(Post.COLLECTION).document(post.getId()).set(mapPost)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

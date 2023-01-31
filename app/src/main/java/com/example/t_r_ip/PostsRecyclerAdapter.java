@@ -1,6 +1,5 @@
 package com.example.t_r_ip;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import com.example.t_r_ip.model.entities.Post;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 class PostViewHolder extends RecyclerView.ViewHolder {
     TextView displayName;
@@ -57,7 +55,7 @@ class PostViewHolder extends RecyclerView.ViewHolder {
         });
 
         postInfo.setText(post.getPostText());
-        if(post.getLocation().isEmpty()) {
+        if (post.getLocation().isEmpty()) {
             postLocation.setVisibility(View.GONE);
         } else {
             postLocation.setText(post.getLocation());
@@ -75,6 +73,7 @@ public class PostsRecyclerAdapter extends RecyclerView.Adapter<PostViewHolder> {
     OnItemClickListener listener;
     LayoutInflater inflater;
     List<Post> data;
+
     public PostsRecyclerAdapter(LayoutInflater inflater, List<Post> data) {
         this.inflater = inflater;
         this.data = data;
