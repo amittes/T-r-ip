@@ -144,6 +144,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count != 0) {
+                    binding.progressBar.setVisibility(View.VISIBLE);
                     String locationForSearch = binding.locationSearch.getText().toString();
                     LiveData<List<Location>> data = LocationModel.instance.searchLocationByName(locationForSearch);
                     locations.clear();
@@ -154,6 +155,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
                         adapter.notifyDataSetChanged();
                     });
 
+                    binding.progressBar.setVisibility(View.GONE);
                     binding.lvLocations.setVisibility(View.VISIBLE);
                 }
             }
