@@ -1,7 +1,5 @@
 package com.example.t_r_ip;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,9 +14,13 @@ public class PostsListFragmentViewModel extends ViewModel {
     LiveData<List<Post>> getData() {
         return data;
     }
+
     LiveData<List<Post>> getUserPosts(String id) {
         return PostModel.instance().getUserPosts(id);
     }
-    LiveData<Post> getPostById(String id) { return PostModel.instance().getPostById(id); }
+
+    LiveData<Post> getPostById(String id) {
+        return PostModel.instance().getPostById(id);
+    }
 
 }

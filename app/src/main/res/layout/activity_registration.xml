@@ -6,7 +6,7 @@
     xmlns:tools="http:// schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp"
     tools:context=".RegistrationActivity">
@@ -14,13 +14,14 @@
     <ImageView
         android:id="@+id/logo_imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:layout_height="150dp"
+        android:paddingBottom="20dp"
         app:srcCompat="@drawable/trip_logo" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="20dp"
         android:text="Register" />
 
     <EditText
@@ -60,7 +61,6 @@
         android:id="@+id/signInButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="140dp"
         android:gravity="center"
         android:text="Sign In" />
 
@@ -69,7 +69,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginStart="160dp"
         android:visibility="gone" />
 
 </LinearLayout>

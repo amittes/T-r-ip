@@ -91,6 +91,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                 "Email is already registered",
                                                 Toast.LENGTH_LONG)
                                         .show();
+                                binding.progressbar.setVisibility(View.GONE);
                             } else {
                                 Model.instance().mAuth
                                         .createUserWithEmailAndPassword(email, password)

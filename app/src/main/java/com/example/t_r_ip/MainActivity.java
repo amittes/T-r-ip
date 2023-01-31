@@ -2,7 +2,6 @@ package com.example.t_r_ip;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +13,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.t_r_ip.model.UserModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     NavController navController;
@@ -30,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.main_bottomNavigationView);
         NavigationUI.setupWithNavController(navView, navController);
-//        Log.d("TAL", "current user "+ UserModel.instance().getCurrentUser() );
 
         if (!UserModel.instance().isUserConnected()) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -56,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // if false menu is disabled
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;

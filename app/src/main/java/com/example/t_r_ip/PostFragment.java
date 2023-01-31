@@ -2,8 +2,6 @@ package com.example.t_r_ip;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.service.autofill.SaveRequest;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,7 +54,7 @@ public class PostFragment extends Fragment implements OptionsDialogFragmentInter
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        binding =  FragmentPostBinding.inflate(inflater, container, false);
+        binding = FragmentPostBinding.inflate(inflater, container, false);
         binding.editPost.setVisibility(View.INVISIBLE);
         String postId = PostFragmentArgs.fromBundle(getArguments()).getPostId();
         binding.progressBar.setVisibility(View.GONE);
@@ -112,7 +110,6 @@ public class PostFragment extends Fragment implements OptionsDialogFragmentInter
     }
 
     void reloadData() {
-//        binding.progressBar.setVisibility(View.VISIBLE);
         PostModel.instance().refreshAllPosts();
     }
 
@@ -124,7 +121,8 @@ public class PostFragment extends Fragment implements OptionsDialogFragmentInter
             bundle.putString("postId", this.currentPost.getId());
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_global_addPostFragment, bundle);
         } else if (index == 1) {
-            PostModel.instance().removePost(this.currentPost, unused -> {});
+            PostModel.instance().removePost(this.currentPost, unused -> {
+            });
         }
     }
 
