@@ -56,6 +56,7 @@ public class UserModel {
     public void logOut() {
         model.mAuth.signOut();
         this.currentUser = null;
+        PostModel.instance().clearAllUserPosts();
     }
 
     public void logIn() {

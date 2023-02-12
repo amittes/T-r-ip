@@ -101,12 +101,14 @@
                         android:id="@+id/location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:textStyle="bold"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="10dp"
                         android:drawableLeft="@drawable/location_poi_svgrepo_com__1_"
                         android:drawablePadding="2dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/displayName" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

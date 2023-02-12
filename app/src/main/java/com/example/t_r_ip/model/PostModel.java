@@ -30,6 +30,10 @@ public class PostModel {
         return _instance;
     }
 
+    public void clearAllUserPosts() {
+        userPostsList = null;
+    }
+
     public LiveData<List<Post>> getAllPosts() {
         if (postsList == null) {
             postsList = localDb.postDao().getAll(false);

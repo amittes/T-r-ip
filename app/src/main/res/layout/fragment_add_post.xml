@@ -99,8 +99,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lv_locations" />
+                    app:layout_constraintTop_toBottomOf="@+id/locationSearch" />
 
                 <ListView
                     android:id="@+id/lv_locations"
