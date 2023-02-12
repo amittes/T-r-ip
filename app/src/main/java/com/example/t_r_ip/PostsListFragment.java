@@ -95,7 +95,22 @@ public class PostsListFragment extends Fragment {
 
 
         getPostsData(userId).observe(getViewLifecycleOwner(), list -> {
-            adapter.setData(showData(list));
+            List<Post> showDataList = showData(list);
+            Log.d("tag", "posts list size " + showDataList.size());
+            if (showDataList.size() == 0) {
+                String output;
+                if (userId == null) {
+                    output = "There is no posts yet";
+                } else {
+                    output = "This user has no posts yet";
+                }
+                binding.textView.setVisibility(View.VISIBLE);
+                binding.textView.setText(output);
+            } else if (binding.textView.getVisibility() == View.VISIBLE) {
+                binding.textView.setVisibility(View.GONE);
+            }
+            adapter.setData(showDataList);
+
         });
 
         PostModel.instance().EventPostsListLoadingState.observe(getViewLifecycleOwner(), status -> {

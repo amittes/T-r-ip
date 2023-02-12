@@ -46,12 +46,14 @@ public class LocationModel {
                     LocationSearchResult res = response.body();
                     data.setValue(res.getResults());
                 } else {
+                    data.setValue(null);
                     Log.d("TAG", "-------- searchLocation response error --------");
                 }
             }
 
             @Override
             public void onFailure(Call<LocationSearchResult> call, Throwable t) {
+                data.setValue(null);
                 Log.d("TAG", "-------- searchLocation fail --------");
             }
         });

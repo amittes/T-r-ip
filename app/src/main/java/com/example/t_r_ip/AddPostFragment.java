@@ -49,6 +49,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
     ActivityResultLauncher<String> galleryLauncher;
     Boolean isAvatarSelected = false;
     String currentPostId = "";
+    Boolean isLocationSelected = false;
     private FragmentAddPostBinding binding;
     private ArrayAdapter<String> adapter;
     private List<String> locations = new ArrayList<>();
@@ -97,6 +98,7 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
         binding = FragmentAddPostBinding.inflate(inflater, container, false);
         if (getArguments().getString("postId") != null) {
             this.currentPostId = getArguments().getString("postId");
+            this.isLocationSelected = true;
         }
 
         if (!currentPostId.isEmpty()) {
@@ -136,7 +138,6 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             }
         });
 
-
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, locations);
         binding.lvLocations.setAdapter(adapter);
 
@@ -144,23 +145,27 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String locationForSearch = binding.locationSearch.getText().toString();
-                if (!locationForSearch.isEmpty()) {
+                if (!locationForSearch.isEmpty() && !isLocationSelected) {
                     binding.progressBar.setVisibility(View.VISIBLE);
-                    LiveData<List<Location>> data = LocationModel.instance.searchLocationByName(locationForSearch);
-                    data.observe(getViewLifecycleOwner(), list -> {
-                        locations.clear();
+                }
+                LiveData<List<Location>> data = LocationModel.instance.searchLocationByName(locationForSearch);
+                data.observe(getViewLifecycleOwner(), list -> {
+                    locations.clear();
+                    if (list != null && !locationForSearch.isEmpty() && !isLocationSelected) {
                         list.forEach(location -> {
                             locations.add(location.getFormatted());
                         });
                         adapter.notifyDataSetChanged();
                         binding.progressBar.setVisibility(View.GONE);
                         binding.lvLocations.setVisibility(View.VISIBLE);
-                    });
-                } else {
-                    locations.clear();
-                    adapter.notifyDataSetChanged();
-                    binding.lvLocations.setVisibility(View.GONE);
-                }
+                    } else {
+                        locations.clear();
+                        adapter.notifyDataSetChanged();
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.lvLocations.setVisibility(View.GONE);
+                        isLocationSelected = false;
+                    }
+                });
             }
 
             @Override
@@ -177,8 +182,9 @@ public class AddPostFragment extends Fragment implements OptionsDialogFragmentIn
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedLocation = locations.get(position);
                 binding.locationSearch.setText(selectedLocation);
+                isLocationSelected = true;
                 binding.lvLocations.setVisibility(View.GONE);
-            }
+                }
         });
 
         return binding.getRoot();
