@@ -99,8 +99,10 @@ public class SettingsFragment extends Fragment implements OptionsDialogFragmentI
             if (user != null) {
                 binding.email.setText(user.getEmail());
                 binding.displayName.setHint(user.getDisplayName());
-                if (user.getProfilePictureUrl() != "") {
+                if (!user.getProfilePictureUrl().isEmpty()) {
                     Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                } else {
+                    binding.profileImage.setImageResource(R.drawable.avatar);
                 }
             }
         });

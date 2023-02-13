@@ -19,14 +19,14 @@
         app:civ_shadow_radius="1dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/avatar" />
+        tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/postlistrow_displayName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="username"
+        android:text=""
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/postlistrow_post_info"
         app:layout_constraintStart_toEndOf="@+id/postlistrow_profile_pic"

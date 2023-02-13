@@ -68,7 +68,7 @@
                         android:layout_height="70dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/avatar"
+                        tools:src="@tools:sample/avatars"
                         app:civ_border_color="#3f51b5"
                         app:civ_border_width="4dp"
                         app:civ_shadow="true"
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="20dp"
-                        android:text="username"
+                        android:text=""
                         android:textSize="24sp"
                         app:layout_constraintStart_toEndOf="@+id/profileImage"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -93,9 +93,10 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:visibility="invisible"
+                        android:background="@null"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_pencil" />
+                        app:srcCompat="@drawable/edit_svgrepo_com" />
 
                     <TextView
                         android:id="@+id/location"
