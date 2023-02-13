@@ -49,8 +49,10 @@ public class UserProfileFragment extends Fragment {
         UserModel.instance().getUserDataById(UserModel.instance().getCurrentUserId(), (user) -> {
             if (user != null) {
                 binding.displayName.setText(user.getDisplayName());
-                if (user.getProfilePictureUrl() != "") {
+                if (!user.getProfilePictureUrl().isEmpty()) {
                     Picasso.get().load(user.getProfilePictureUrl()).into(binding.profileImage);
+                } else {
+                    binding.profileImage.setImageResource(R.drawable.avatar);
                 }
             }
         });
